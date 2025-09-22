@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+@plugin "daisyui";
+
+@theme {
+  --color-cursor-bg: #0f0f0f;
+  --color-cursor-sidebar: #171717;
+  --color-cursor-border: #2a2a2a;
+  --color-cursor-text: #e5e5e5;
+  --color-cursor-muted: #a1a1aa;
+  --color-cursor-accent: #3b82f6;
+  --color-cursor-accent-hover: #2563eb;
+}
+
+/* Base styles */
+html,
+body {
+  background: #0f0f0f;
+  color: #e5e5e5;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+}
