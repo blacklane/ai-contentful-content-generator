@@ -7,15 +7,12 @@
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:frontend\"",
     "dev:server": "ts-node-dev --respawn --transpile-only src/server.ts",
     "dev:frontend": "vite --port ${FRONTEND_PORT:-8000}",
-    "dev:local": "HOST=localhost concurrently \"npm run dev:server\" \"npm run dev:frontend\"",
     "build": "npm run build:server && npm run build:frontend",
     "build:server": "tsc",
     "build:frontend": "vite build",
     "start": "node dist/server.js",
     "lint": "eslint src/**/*.ts --fix",
-    "type-check": "tsc --noEmit",
-    "format": "prettier --write src/**/*.ts",
-    "generate-secrets": "node scripts/generate-secrets.js"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.13",

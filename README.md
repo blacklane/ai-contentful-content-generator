@@ -1,15 +1,17 @@
 # Contentful AI Page Generator
 
-AI-powered content generation tool for creating SEO landing pages using Blacklane's internal AI and publishing to Contentful.
+Professional web application for AI-powered content generation and Contentful CMS publishing. Built with TypeScript, Express, and modern web technologies to streamline content creation workflows for marketing teams and developers.
 
-## ✨ Features
+## ✨ Core Features
 
-- **🤖 AI Content Generation** - Generate hero sections, FAQs, and SEO text
-- **🎨 Modern Dark UI** - ChatGPT/Cursor-style interface with Tailwind CSS + DaisyUI
-- **🌍 Multi-language Support** - English, Spanish, German, French
-- **🔗 Blacklane AI Integration** - Uses internal `ai-chat.blacklane.net` endpoint
-- **📊 Multiple AI Models** - Support for GPT-5, GPT-4o, Claude, Gemini, and more
-- **🚀 Real-time Generation** - Instant content creation with structured JSON output
+- **🤖 Advanced AI Content Generation** - Generate hero sections, FAQs, SEO text, and custom components using Blacklane's specialized AI models
+- **🎨 Professional Dark UI** - Modern, responsive interface inspired by ChatGPT/Cursor with Tailwind CSS + DaisyUI
+- **🌍 Multi-language Support** - Content generation in English, Spanish, German, French with localized schemas
+- **🔗 Blacklane AI Integration** - Specialized AI models optimized for content generation
+- **📦 Direct Contentful Publishing** - Seamless integration with Contentful CMS including draft management and releases
+- **🔐 Enterprise Security** - JWT authentication, secure API endpoints, and role-based access control
+- **💬 AI Assistant** - Interactive chat interface for content strategy and SEO optimization guidance
+- **🎯 Component-Based Architecture** - Modular content components with validation and schema management
 
 ## 🚀 Quick Start
 
@@ -23,183 +25,199 @@ AI-powered content generation tool for creating SEO landing pages using Blacklan
    cp env.example .env
    ```
    
-3. **Add your Blacklane AI API key:**
+3. **Configure required services:**
    ```bash
-   # Edit .env file
+   # Edit .env file with your credentials
    AI_API_KEY=sk-your_blacklane_api_key_here
+   CONTENTFUL_SPACE_ID=your_space_id
+   CONTENTFUL_MANAGEMENT_TOKEN=CFPAT-your_token
+   AUTH_USERNAME=admin
+   AUTH_PASSWORD=your_secure_password
    ```
 
 4. **Start application:**
    ```bash
-   # Start both backend and frontend with hot reload
    npm run dev
    ```
 
-5. **Open in browser:**
+5. **Access application:**
    ```
-   http://localhost:8000
-   ```
-
-   **Default Ports:**
-   - Frontend: `http://localhost:8000`
-   - Backend API: `http://localhost:8001`
-
-6. **Setup Contentful (Optional):**
-   ```bash
-   # Add to .env file for publishing features
-   CONTENTFUL_SPACE_ID=your_space_id
-   CONTENTFUL_MANAGEMENT_TOKEN=CFPAT-your_token
+   Frontend: http://localhost:8000
+   Backend API: http://localhost:8001
    ```
 
-## 📁 Project Structure
+## 📁 Architecture Overview
 
 ```
 ├── src/
 │   ├── server.ts                 # Express server entry point
-│   ├── frontend/                 # Frontend TypeScript code
-│   ├── server/                   # Backend API routes & middleware
-│   ├── contentful/              # Contentful integration & mappings
-│   ├── ai/                      # AI client & prompt handling
-│   └── utils/                   # Shared utilities
-├── public/                      # Static frontend assets
-├── dist/                        # Compiled TypeScript output
-├── .env                         # Environment variables
-└── package.json
+│   ├── frontend/                 # Frontend TypeScript application
+│   │   ├── app.ts               # Main application logic
+│   │   ├── components.ts        # Contentful component schemas
+│   │   └── js/                  # Modular frontend components
+│   │       ├── ai-assistant.ts  # Interactive AI chat
+│   │       ├── auth.ts          # Authentication management
+│   │       ├── content-generation.ts # Content creation workflow
+│   │       └── step-management.ts    # Multi-step form handling
+│   ├── server/                   # Backend API & middleware
+│   │   ├── routes/              # API endpoints
+│   │   ├── auth/                # JWT & credential management
+│   │   └── middleware/          # Security & validation
+│   ├── contentful/              # CMS integration layer
+│   │   ├── client.ts            # Contentful API client
+│   │   ├── *-schema.ts          # Component type definitions
+│   │   └── *-mappings.ts        # Data transformation logic
+│   ├── ai/                      # AI provider abstraction
+│   │   ├── client.ts            # Multi-provider AI client
+│   │   ├── prompt-builder.ts    # Dynamic prompt generation
+│   │   └── schemas.ts           # AI response validation
+│   └── validation/              # Zod schema validation
+├── public/                      # Static assets & HTML
+└── dist/                        # Production build output
 ```
 
-## 🔧 Environment Variables
+## ⚙️ Required Configuration
 
-### Required Variables
-
-```bash
-# AI API (Blacklane Internal)
-AI_API_KEY=sk-your_blacklane_api_key_here
-```
-
-### Optional Configuration
+### Environment Variables
 
 ```bash
-# Server Ports
-BACKEND_PORT=8001          # API server port
-FRONTEND_PORT=8000         # Frontend dev server port
-NODE_ENV=development
-
-# AI Models (choose one)
-AI_MODEL_ID=gpt-5-chat          # Default: GPT-5 Chat
-AI_MODEL_ID=azure/gpt-4o        # Most powerful
-AI_MODEL_ID=azure/gpt-4o-mini   # Fast & cost-effective
-AI_MODEL_ID=Claude-Sonnet-4     # Anthropic Claude
-AI_MODEL_ID=gemini-2.5-pro      # Google Gemini
-
 # Authentication
 AUTH_USERNAME=admin
 AUTH_PASSWORD=your_secure_password_here
 
-# Contentful (for publishing features)
+# Blacklane AI Integration
+AI_API_KEY=sk-your_blacklane_api_key_here
+AI_PROVIDER=blacklane
+AI_BASE_URL=https://ai-chat.blacklane.net/api/v1
+AI_MODEL_ID=seo-landing-page-generator
+
+# Contentful CMS
 CONTENTFUL_SPACE_ID=your_space_id
 CONTENTFUL_ENVIRONMENT_ID=master
-CONTENTFUL_MANAGEMENT_TOKEN=CFPAT-your_token
+CONTENTFUL_MANAGEMENT_TOKEN=CFPAT-your_management_token
 
-# Security & CORS
-CORS_ORIGIN=http://localhost:8000
-
+# Server Configuration
+FRONTEND_PORT=8000
+BACKEND_PORT=8001
+HOST=0.0.0.0
+NODE_ENV=development
 ```
 
-## 🎯 Current Status
 
-✅ **MVP Complete - Ready for Use!**
-- ✅ TypeScript backend with Express server
-- ✅ Modern dark UI with Tailwind CSS + DaisyUI  
-- ✅ Blacklane AI integration (`ai-chat.blacklane.net`)
-- ✅ Multi-model support (GPT-5, GPT-4o, Claude, Gemini)
-- ✅ Structured JSON content generation
-- ✅ Multi-language support (EN, ES, DE, FR)
-- ✅ Real-time generation with loading states
-- ✅ Error handling and validation
-- ✅ JWT-based authentication system
-- ✅ Secure API endpoints with rate limiting
+## 🎯 Production Ready Features
 
-✅ **Contentful Integration Ready!**
-- 📦 Direct publishing to Contentful CMS
-- 🎯 Component mapping (Hero, FAQ, SEO Text)
-- 📊 Draft content management with Releases support
-- 🔄 Real Contentful schema validation
-- 🔐 JWT authentication for secure publishing
+### ✅ **Core Application**
+- **TypeScript Architecture** - Full-stack TypeScript with Express server and modular frontend
+- **Professional UI/UX** - Dark theme interface with responsive design and accessibility features
+- **Advanced Content Generation** - Structured JSON output with schema validation and error handling
+- **Multi-Language Support** - Localized content generation (EN, ES, DE, FR) with proper schema mapping
+- **Interactive AI Assistant** - Real-time chat interface for content strategy and SEO guidance
+- **Enterprise Security** - JWT authentication, secure API endpoints, CORS protection, and rate limiting
 
-## 📖 Usage Example
+### ✅ **Contentful CMS Integration**
+- **Direct Publishing** - Seamless content publishing to Contentful with draft management
+- **Component Mapping** - Automated mapping for Hero, FAQ, SEO Text, and custom components
+- **Release Management** - Support for Contentful Releases with draft content organization
+- **Schema Validation** - Real-time validation against Contentful content models
+- **Error Handling** - Comprehensive error handling with user-friendly feedback
 
-1. **Fill the form:**
-   - **Topic:** "Premium Airport Transfer Service"
-   - **Keywords:** "luxury, professional, blacklane"
-   - **Language:** English
-   - **Content Types:** Hero Component + Benefits Component
+### ✅ **Developer Experience**
+- **Hot Reload Development** - Concurrent frontend and backend development with live updates
+- **Code Quality Tools** - ESLint, Prettier, TypeScript checking with automated formatting
+- **Modular Architecture** - Clean separation of concerns with reusable components
+- **Comprehensive Logging** - Structured logging for debugging and monitoring
+- **Environment Management** - Flexible configuration with secure secret handling
 
-2. **Click "Generate Content"**
+## 🚀 How It Works
 
-3. **Get structured JSON output:**
-   ```json
-   {
-     "topic": "Premium Airport Transfer Service",
-     "language": "en",
-     "generatedSections": [
-       {
-         "type": "hero",
-         "title": "Experience Luxury with Blacklane Premium Transfer",
-         "subtitle": "Arrive in style with professional chauffeurs...",
-         "cta": "Book Your Blacklane Ride Today"
-       },
-     ],
-     "metadata": {
-       "keywordsUsed": ["luxury", "professional", "blacklane"],
-       "generatedAt": "2025-08-19T14:43:03.467Z"
-     }
-   }
-   ```
+### Step-by-Step Workflow
 
-## 🛠️ Development
+1. **🔐 Authenticate** - Secure login with username/password
+2. **💬 AI Planning** - Interactive chat with AI assistant for content strategy
+3. **📝 Project Setup** - Define topic, keywords, target language, and content components
+4. **🤖 AI Generation** - Advanced AI creates structured, SEO-optimized content
+5. **✅ Review & Edit** - Validate and customize generated content
+6. **📦 Publish** - Direct publishing to Contentful CMS with release management
 
-### Available Scripts
+### Example Workflow
 
-**Development:**
-- `npm run dev` - Start development server with hot reload
-- `npm run dev:server` - Start only backend server
-- `npm run dev:frontend` - Start only frontend (Vite)
+**Input:**
+```
+Topic: "Premium Airport Transfer Service"
+Keywords: "luxury, professional, reliable transport"
+Language: English
+Components: Hero + FAQ + SEO Text
+```
 
-**Build & Production:**
-- `npm run build` - Build both server and frontend
-- `npm start` - Run production build
+**AI-Generated Output:**
+```json
+{
+  "hero": {
+    "heading": "Experience Premium Airport Transfers with Professional Chauffeurs",
+    "ctaText": "Book Your Luxury Ride",
+    "ctaTargetLink": "/booking"
+  },
+  "faq": [
+    {
+      "question": "What makes your airport transfer service premium?",
+      "answer": "Our professional chauffeurs, luxury vehicles, and personalized service..."
+    }
+  ],
+  "seoText": {
+    "title": "Luxury Airport Transfer Services - Professional & Reliable",
+    "content": "Experience the finest in airport transportation..."
+  }
+}
+```
 
-**Code Quality:**
-- `npm run lint` - ESLint with auto-fix
-- `npm run type-check` - TypeScript type checking
-- `npm run format` - Format code with Prettier
+**Result:** Ready-to-publish content in Contentful with proper schema validation and SEO optimization.
 
+## 🛠️ Development & Deployment
 
-## 🤖 Available AI Models
+### Essential Commands
 
-The Blacklane AI endpoint supports multiple models:
+```bash
+# Development
+npm run dev                 # Start both frontend and backend with hot reload
+npm run dev:server         # Backend API server only
+npm run dev:frontend       # Frontend Vite server only
 
-### **Recommended Models:**
-- `gpt-5-chat` - **Current default** (GPT-5 optimized for chat)
-- `azure/gpt-4o` - Most powerful GPT-4o
-- `azure/gpt-4o-mini` - Fast and cost-effective
+# Production
+npm run build              # Build both frontend and backend for production
+npm start                  # Run production build
 
-### **Alternative Models:**
-- `gpt-5`, `gpt-5-mini`, `gpt-5-nano` - GPT-5 variants
-- `azure/o1`, `azure/o1-mini` - OpenAI reasoning models
-- `Claude-Sonnet-4`, `bedrock/claude-3-7-sonnet` - Anthropic Claude
-- `gemini-2.5-pro`, `gemini-2.5-flash` - Google Gemini
-- `azure/o3-mini`, `o3`, `o3-pro` - Latest OpenAI models
+# Code Quality
+npm run lint               # ESLint with auto-fix
+npm run type-check         # TypeScript type validation
+```
 
-### **Model Selection Tips:**
-- **For quality**: `azure/gpt-4o` or `gpt-5-chat`
-- **For speed**: `azure/gpt-4o-mini`
-- **For reasoning**: `azure/o1-mini`
-- **GPT-5 models**: Require `temperature=1` (handled automatically)
+### Technology Stack
 
-## 📝 Notes
+- **Backend:** Node.js + Express + TypeScript
+- **Frontend:** Vanilla TypeScript + Tailwind CSS + DaisyUI
+- **Build Tools:** Vite + ts-node-dev with hot reload
+- **Validation:** Zod schemas for runtime type safety
+- **Authentication:** JWT with bcrypt password hashing
+- **AI Integration:** Blacklane AI with specialized content generation models
+- **CMS:** Contentful Management API with release support
 
-- No React/Next.js - keeping it simple with vanilla HTML/JS
-- Tailwind + DaisyUI for quick styling without brain overhead
-- TypeScript for better development experience
-- Separate concerns: AI generation → mapping → Contentful publishing
+## 🎯 Use Cases
+
+### **Marketing Teams**
+- Generate SEO-optimized landing pages
+- Create multilingual marketing content
+- Develop FAQ sections and help content
+- Streamline content approval workflows
+
+### **Content Managers**
+- Manage content releases and drafts
+- Collaborate with AI for content strategy
+- Maintain brand consistency across languages
+- Scale content production efficiently
+
+## 📝 Architecture Notes
+
+- **No Framework Overhead** - Vanilla TypeScript for maximum performance and simplicity
+- **Modular Design** - Clean separation between AI generation, content mapping, and CMS publishing  
+- **Type Safety** - Full TypeScript coverage with Zod runtime validation
+- **Scalable Architecture** - Easy to extend with new AI providers, content types, and CMS integrations
