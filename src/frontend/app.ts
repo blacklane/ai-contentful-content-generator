@@ -727,8 +727,6 @@ const disableNavigationAfterPublish = (): void => {
         'hover:text-cursor-text',
         'hover:border-cursor-accent',
       );
-      button.title =
-        'Content has been published to Contentful. Use Reset to start over.';
     }
   });
 };

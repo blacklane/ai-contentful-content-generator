@@ -1,6 +1,5 @@
 import { elements } from './dom-elements.js';
-import type { AIMessage } from './state.js';
-import { AppState } from './state.js';
+import { AppState, type AIMessage } from './state.js';
 
 // AI Assistant Functions with TypeScript types
 
@@ -126,7 +125,7 @@ export const sendAIMessage = async (): Promise<void> => {
       {
         method: 'POST',
         headers: {
-          Authorization: 'Bearer sk-449154ce78824204b0fbd3ac94abe55f',
+          Authorization: `Bearer ${process.env.AI_API_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -155,7 +154,7 @@ export const sendAIMessage = async (): Promise<void> => {
     if (data.choices && data.choices[0]) {
       addAIMessage(data.choices[0].message.content);
     }
-  } catch (error) {
+  } catch {
     addAIMessage('Sorry, I had trouble connecting. Please try again.');
   } finally {
     hideAILoading();

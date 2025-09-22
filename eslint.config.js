@@ -30,7 +30,7 @@ export default tseslint.config(
       'prefer-template': 'error',
 
       // Import/Export
-      'no-duplicate-imports': 'error',
+      'no-duplicate-imports': ['error', { includeExports: true }],
 
       // Code style
       curly: ['error', 'all'],

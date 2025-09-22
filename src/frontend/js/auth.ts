@@ -437,8 +437,6 @@ class AuthManager {
   private async handleLoginSubmit(e: Event): Promise<void> {
     e.preventDefault();
 
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
     const usernameInput = document.getElementById(
       'loginUsername',
     ) as HTMLInputElement;
@@ -486,7 +484,7 @@ class AuthManager {
         loginError.textContent = result.message || 'Login failed';
         loginError.classList.remove('hidden');
       }
-    } catch (error) {
+    } catch {
       loginError.textContent = 'Network error. Please try again.';
       loginError.classList.remove('hidden');
     } finally {

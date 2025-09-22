@@ -93,7 +93,8 @@ AI_MODEL_ID=seo-landing-page-generator
 
 # Contentful CMS
 CONTENTFUL_SPACE_ID=your_space_id
-CONTENTFUL_ENVIRONMENT_ID=master
+# For production use 'main', for development use alex's dev environment
+CONTENTFUL_ENVIRONMENT_ID=alex-suprun-dev-new
 CONTENTFUL_MANAGEMENT_TOKEN=CFPAT-your_management_token
 
 # Server Configuration
