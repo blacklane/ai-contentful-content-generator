@@ -227,13 +227,7 @@ export const CONTENTFUL_SEO_TEXT_SCHEMA = {
   },
 
   // Fields that AI can generate
-  aiGeneratedFields: [
-    'imageOn',
-    'title',
-    'description',
-    'smallPhotoText',
-    'imageAltText',
-  ],
+  aiGeneratedFields: ['imageOn', 'title', 'description', 'smallPhotoText'],
 
   // Required fields for component creation
   requiredFields: ['imageOn', 'title', 'isFrame', 'isThicker'],
@@ -249,7 +243,7 @@ export const CONTENTFUL_SEO_TEXT_SCHEMA = {
   },
 
   // Localized fields
-  localizedFields: ['title', 'description', 'smallPhotoText', 'imageAltText'],
+  localizedFields: ['title', 'description', 'smallPhotoText'],
 };
 
 // AI Generated SEO Text structure
@@ -257,7 +251,6 @@ export interface AIGeneratedSEOText {
   title: string;
   description: string;
   imagePosition?: 'left' | 'right';
-  imageAltText?: string;
   shortDescription?: string; // For smallPhotoText
 }
 

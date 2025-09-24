@@ -468,7 +468,7 @@ export class ContentfulPublisher {
 
   async publishSEOTextComponent(
     aiSEOTextData: any,
-    defaultImageAssetId: string,
+    defaultImageAssetId?: string,
     _options: Record<string, unknown> = {},
   ): Promise<PublishResult> {
     try {
@@ -481,7 +481,7 @@ export class ContentfulPublisher {
       console.log('📝 Creating SEO Text component...');
       const seoTextEntry = mapAISEOTextToContentful(
         aiSEOTextData,
-        defaultImageAssetId,
+        defaultImageAssetId || '',
         this.config.locale,
       );
 
@@ -564,24 +564,11 @@ export class ContentfulPublisher {
 
       console.log('🔍 Page data extracted:', {
         topic: pageData.topic,
-        keywords: pageData.keywords,
         language: pageData.language,
         hasMetadata: !!pageData.metadata,
         metadataKeys: pageData.metadata ? Object.keys(pageData.metadata) : [],
         sectionsCount: pageData.generatedSections?.length || 0,
       });
-
-      // Check if keywords are in metadata
-      if (!pageData.keywords && pageData.metadata?.keywordsUsed) {
-        pageData.keywords = pageData.metadata.keywordsUsed.join(', ');
-        console.log('📝 Keywords extracted from metadata:', pageData.keywords);
-      }
-
-      // Fallback for keywords if still missing
-      if (!pageData.keywords) {
-        pageData.keywords = 'premium, professional, quality';
-        console.log('📝 Using fallback keywords:', pageData.keywords);
-      }
 
       const componentIds: string[] = [];
       const componentTypeIdMap: { [type: string]: string[] } = {};
@@ -640,8 +627,7 @@ export class ContentfulPublisher {
         } else if (section.type === 'faqs') {
           console.log('❓ Creating FAQ component...');
 
-          // Use the same default image as Hero component
-          const defaultImageAssetId = '4yVKNgR5TO4py6zdvKRqik';
+          const defaultImageAssetId = 'iyuNKSpkeW2c5Ja2D2E3Q';
 
           const faqResult = await this.publishFAQComponent(
             section,
@@ -662,12 +648,9 @@ export class ContentfulPublisher {
         } else if (section.type === 'seoText') {
           console.log('📝 Creating SEO Text component...');
 
-          // Use the same default image as Hero component
-          const defaultImageAssetId = '4yVKNgR5TO4py6zdvKRqik';
-
           const seoTextResult = await this.publishSEOTextComponent(
             section,
-            defaultImageAssetId,
+            undefined, // No default image for SEO text components
             {},
           );
 

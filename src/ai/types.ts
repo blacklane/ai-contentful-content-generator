@@ -1,6 +1,7 @@
 export interface GenerationParams {
-  topic: string;
-  keywords: string;
+  mainKeywords: string;
+  secondaryKeywords: string;
+  questions?: string;
   contentTypes: string[];
   language: string;
   conversationContext?: Array<{ role: string; content: string }>;

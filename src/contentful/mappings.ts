@@ -52,7 +52,7 @@ export const HERO_MAPPING_CONFIG = {
   fieldMappings: CONTENTFUL_HERO_SCHEMA.aiFieldMapping,
   derivedFields: {
     // Fields we derive from AI content or set defaults
-    cta: (aiHero: AIGeneratedHero) => !!(aiHero.ctaText || aiHero.cta),
+    cta: () => false, // Always false - we don't use CTA for Hero
     showTrustpilotWidget: () =>
       CONTENTFUL_HERO_SCHEMA.defaultValues.showTrustpilotWidget,
     hideImageOnMobile: () =>
@@ -100,7 +100,7 @@ export function mapAIHeroToContentful(
   // Handle derived fields
   Object.entries(HERO_MAPPING_CONFIG.derivedFields).forEach(
     ([cfField, deriveFn]) => {
-      const value = deriveFn(aiHero);
+      const value = deriveFn();
       if (value !== undefined) {
         // Check if field is localized
         const isLocalized =
@@ -142,12 +142,10 @@ export function mapAIHeroToContentful(
     [locale]: HERO_MAPPING_CONFIG.defaultValues.hideImageOnMobile,
   };
 
-  // Also force CTA if we have ctaText
-  if (aiHero.ctaText || aiHero.cta) {
-    contentfulEntry.fields.cta = {
-      [locale]: true,
-    };
-  }
+  // Force CTA to false - we don't use CTA for Hero components
+  contentfulEntry.fields.cta = {
+    [locale]: false,
+  };
 
   // Debug log the complete entry (uncomment for debugging)
   // console.log('🔍 Complete Contentful entry:', JSON.stringify(contentfulEntry, null, 2));

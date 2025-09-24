@@ -16,24 +16,20 @@ export interface DOMElements {
   step5: HTMLElement | null;
 
   // Form inputs
-  projectTopic: HTMLInputElement | null;
-  projectKeywords: HTMLTextAreaElement | null;
+  projectMainKeywords: HTMLTextAreaElement | null;
+  projectSecondaryKeywords: HTMLTextAreaElement | null;
+  projectQuestions: HTMLTextAreaElement | null;
   projectLanguage: HTMLSelectElement | null;
 
   // Error elements
-  topicError: HTMLElement | null;
-  keywordsError: HTMLElement | null;
+  mainKeywordsError: HTMLElement | null;
+  secondaryKeywordsError: HTMLElement | null;
+  questionsError: HTMLElement | null;
 
   // Mobile elements
   mobileMenuBtn: HTMLElement | null;
   mobileOverlay: HTMLElement | null;
   sidebar: HTMLElement | null;
-
-  // AI Assistant
-  aiAssistantPanel: HTMLElement | null;
-  aiConversation: HTMLElement | null;
-  aiInput: HTMLInputElement | null;
-  aiSendBtn: HTMLButtonElement | null;
 
   // Navigation buttons
   nextToComponents: HTMLButtonElement | null;
@@ -80,28 +76,28 @@ export const elements: DOMElements = {
   step5: document.getElementById('step5'),
 
   // Form inputs
-  projectTopic: document.getElementById('projectTopic') as HTMLInputElement,
-  projectKeywords: document.getElementById(
-    'projectKeywords',
+  projectMainKeywords: document.getElementById(
+    'projectMainKeywords',
+  ) as HTMLTextAreaElement,
+  projectSecondaryKeywords: document.getElementById(
+    'projectSecondaryKeywords',
+  ) as HTMLTextAreaElement,
+  projectQuestions: document.getElementById(
+    'projectQuestions',
   ) as HTMLTextAreaElement,
   projectLanguage: document.getElementById(
     'projectLanguage',
   ) as HTMLSelectElement,
 
   // Error elements
-  topicError: document.getElementById('topicError'),
-  keywordsError: document.getElementById('keywordsError'),
+  mainKeywordsError: document.getElementById('mainKeywordsError'),
+  secondaryKeywordsError: document.getElementById('secondaryKeywordsError'),
+  questionsError: document.getElementById('questionsError'),
 
   // Mobile elements
   mobileMenuBtn: document.getElementById('mobileMenuBtn'),
   mobileOverlay: document.getElementById('mobileOverlay'),
   sidebar: document.getElementById('sidebar'),
-
-  // AI Assistant
-  aiAssistantPanel: document.getElementById('aiAssistantPanel'),
-  aiConversation: document.getElementById('aiConversation'),
-  aiInput: document.getElementById('aiInput') as HTMLInputElement,
-  aiSendBtn: document.getElementById('aiSendBtn') as HTMLButtonElement,
 
   // Navigation buttons
   nextToComponents: document.getElementById(

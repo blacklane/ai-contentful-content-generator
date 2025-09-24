@@ -1,17 +1,11 @@
 // Application State Management with TypeScript interfaces
 
-export interface AIMessage {
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: number;
-}
-
 export interface ProjectData {
-  topic: string;
-  keywords: string;
+  mainKeywords: string;
+  secondaryKeywords: string;
+  questions: string;
   language: string;
   components: string[];
-  aiConversation: AIMessage[];
 }
 
 export interface ReleaseConfig {
@@ -33,15 +27,15 @@ import type { DOMElements } from './dom-elements.js';
 export const AppState: AppStateType = {
   currentStep: 1,
   projectData: {
-    topic: '',
-    keywords: '',
+    mainKeywords: '',
+    secondaryKeywords: '',
+    questions: '',
     language: 'en',
     components: ['hero', 'seoText'],
-    aiConversation: [],
   },
   generatedContent: null,
   releaseConfig: {
-    mode: 'direct',
+    mode: 'release',
     title: '',
     description: '',
     publishTiming: 'draft',
@@ -49,11 +43,15 @@ export const AppState: AppStateType = {
 };
 
 export const updateProjectData = (elements: DOMElements): void => {
-  if (elements.projectTopic) {
-    AppState.projectData.topic = elements.projectTopic.value;
+  if (elements.projectMainKeywords) {
+    AppState.projectData.mainKeywords = elements.projectMainKeywords.value;
   }
-  if (elements.projectKeywords) {
-    AppState.projectData.keywords = elements.projectKeywords.value;
+  if (elements.projectSecondaryKeywords) {
+    AppState.projectData.secondaryKeywords =
+      elements.projectSecondaryKeywords.value;
+  }
+  if (elements.projectQuestions) {
+    AppState.projectData.questions = elements.projectQuestions.value;
   }
   if (elements.projectLanguage) {
     AppState.projectData.language = elements.projectLanguage.value;
@@ -63,15 +61,15 @@ export const updateProjectData = (elements: DOMElements): void => {
 export const resetAppState = (): void => {
   AppState.currentStep = 1;
   AppState.projectData = {
-    topic: '',
-    keywords: '',
+    mainKeywords: '',
+    secondaryKeywords: '',
+    questions: '',
     language: 'en',
     components: ['hero', 'seoText'],
-    aiConversation: [],
   };
   AppState.generatedContent = null;
   AppState.releaseConfig = {
-    mode: 'direct',
+    mode: 'release',
     title: '',
     description: '',
     publishTiming: 'draft',

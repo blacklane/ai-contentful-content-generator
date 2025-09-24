@@ -7,8 +7,9 @@ export interface ValidationResult {
 }
 
 export interface FormData {
-  topic: string;
-  keywords: string;
+  mainKeywords: string;
+  secondaryKeywords: string;
+  questions?: string;
   language?: string;
 }
 
@@ -27,39 +28,55 @@ function validateKeywords(value: string): boolean {
     .map(k => k.trim())
     .filter(k => k.length > 0);
 
-  // Must have at least 3 keywords
-  if (keywords.length < 3) {
+  // Must have at least 1 keyword
+  if (keywords.length < 1) {
     return false;
   }
 
-  // Total word count across all keywords should be at least 3
+  // Total word count across all keywords should be at least 1
   const totalWords = keywords
     .join(' ')
     .split(/\s+/)
     .filter(word => word.length > 0);
-  return totalWords.length >= 3;
+  return totalWords.length >= 1;
 }
 
 // Validation functions
-export function validateTopic(value: string): string | null {
-  if (!value || value.trim().length === 0) {
-    return 'Topic is required';
-  }
+// Topic validation removed - using mainKeywords as primary field
 
-  if (!validateMinWords(value, 3)) {
-    return 'Topic must contain at least 3 words';
-  }
-
-  return null;
-}
-
-export function validateKeywordsField(value: string): string | null {
+export function validateMainKeywords(value: string): string | null {
   if (!value || value.trim().length === 0) {
     return 'Keywords are required';
   }
 
   if (!validateKeywords(value)) {
-    return 'Keywords must be comma-separated with at least 3 keywords total';
+    return 'Keywords must be comma-separated with at least 1 keyword total';
+  }
+
+  return null;
+}
+
+export function validateSecondaryKeywords(value: string): string | null {
+  if (!value || value.trim() === '') {
+    return 'Secondary keywords are required';
+  }
+
+  // Split by comma and trim each keyword
+  const keywords = value
+    .split(',')
+    .map(k => k.trim())
+    .filter(k => k.length > 0);
+
+  if (keywords.length === 0) {
+    return 'Secondary keywords are required';
+  }
+
+  return null;
+}
+
+export function validateQuestions(value: string): string | null {
+  if (!value || value.trim() === '') {
+    return null; // Optional field
   }
 
   return null;
@@ -69,14 +86,23 @@ export function validateKeywordsField(value: string): string | null {
 export function validateForm(formData: FormData): ValidationResult {
   const errors: Record<string, string> = {};
 
-  const topicError = validateTopic(formData.topic);
-  if (topicError) {
-    errors.topic = topicError;
+  const mainKeywordsError = validateMainKeywords(formData.mainKeywords);
+  if (mainKeywordsError) {
+    errors.mainKeywords = mainKeywordsError;
   }
 
-  const keywordsError = validateKeywordsField(formData.keywords);
-  if (keywordsError) {
-    errors.keywords = keywordsError;
+  const secondaryKeywordsError = validateSecondaryKeywords(
+    formData.secondaryKeywords || '',
+  );
+  if (secondaryKeywordsError) {
+    errors.secondaryKeywords = secondaryKeywordsError;
+  }
+
+  if (formData.questions) {
+    const questionsError = validateQuestions(formData.questions);
+    if (questionsError) {
+      errors.questions = questionsError;
+    }
   }
 
   return {

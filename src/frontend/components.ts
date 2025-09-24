@@ -189,7 +189,7 @@ export const CONTENTFUL_COMPONENTS: ContentfulComponents = {
       items: {
         type: 'array',
         required: true,
-        minItems: 3,
+        minItems: 1,
         maxItems: 12,
         description: 'List of questions and answers',
         itemSchema: {

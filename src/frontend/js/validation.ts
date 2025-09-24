@@ -6,15 +6,17 @@ import { AppState } from './state.js';
 type ValidationFunction = (value: string) => string | null;
 
 // Validation functions
-let validateTopic: ValidationFunction | undefined;
-let validateKeywordsField: ValidationFunction | undefined;
+let validateMainKeywords: ValidationFunction | undefined;
+let validateSecondaryKeywords: ValidationFunction | undefined;
+let validateQuestions: ValidationFunction | undefined;
 
 // Import validation functions
 export const initValidation = async (): Promise<void> => {
   try {
     const validationModule = await import('../validation.js');
-    validateTopic = validationModule.validateTopic;
-    validateKeywordsField = validationModule.validateKeywordsField;
+    validateMainKeywords = validationModule.validateMainKeywords;
+    validateSecondaryKeywords = validationModule.validateSecondaryKeywords;
+    validateQuestions = validationModule.validateQuestions;
   } catch (error) {
     console.warn('Failed to load validation module, using fallback validation');
     // Fallback to basic validation
@@ -66,9 +68,10 @@ export const validateStep1 = (): void => {
   let isValid = true;
 
   // Basic validation if advanced validation is not loaded
-  if (!validateTopic || !validateKeywordsField) {
+  if (!validateMainKeywords || !validateSecondaryKeywords) {
     const basicValid =
-      AppState.projectData.topic.trim() && AppState.projectData.keywords.trim();
+      AppState.projectData.mainKeywords.trim() &&
+      AppState.projectData.secondaryKeywords.trim();
 
     if (elements.nextToComponents) {
       elements.nextToComponents.disabled = !basicValid;
@@ -89,28 +92,44 @@ export const validateStep1 = (): void => {
   }
 
   // Advanced validation
-  const topicError = validateTopic(AppState.projectData.topic);
-  const keywordsError = validateKeywordsField(AppState.projectData.keywords);
+  const mainKeywordsError = validateMainKeywords(
+    AppState.projectData.mainKeywords,
+  );
+  const secondaryKeywordsError = validateSecondaryKeywords
+    ? validateSecondaryKeywords(AppState.projectData.secondaryKeywords || '')
+    : null;
+  const questionsError =
+    validateQuestions && AppState.projectData.questions.trim()
+      ? validateQuestions(AppState.projectData.questions)
+      : null;
 
-  if (topicError && AppState.projectData.topic.trim()) {
-    showFieldError('topic', topicError);
+  if (mainKeywordsError) {
+    showFieldError('mainKeywords', mainKeywordsError);
     isValid = false;
   } else {
-    hideFieldError('topic');
+    hideFieldError('mainKeywords');
   }
 
-  if (keywordsError && AppState.projectData.keywords.trim()) {
-    showFieldError('keywords', keywordsError);
+  if (secondaryKeywordsError) {
+    showFieldError('secondaryKeywords', secondaryKeywordsError);
     isValid = false;
   } else {
-    hideFieldError('keywords');
+    hideFieldError('secondaryKeywords');
+  }
+
+  if (questionsError && AppState.projectData.questions.trim()) {
+    showFieldError('questions', questionsError);
+    isValid = false;
+  } else {
+    hideFieldError('questions');
   }
 
   const formComplete =
-    AppState.projectData.topic.trim() &&
-    AppState.projectData.keywords.trim() &&
-    !topicError &&
-    !keywordsError;
+    AppState.projectData.mainKeywords.trim() &&
+    AppState.projectData.secondaryKeywords.trim() &&
+    !mainKeywordsError &&
+    !secondaryKeywordsError &&
+    !questionsError;
 
   if (elements.nextToComponents) {
     elements.nextToComponents.disabled = !formComplete;
@@ -133,7 +152,9 @@ export const validateComponentSelection = (): void => {
   const selectedComponents = AppState.projectData.components || [];
   const generateBtn = elements.nextToGenerate;
 
-  if (!generateBtn) return;
+  if (!generateBtn) {
+    return;
+  }
 
   if (selectedComponents.length === 0) {
     generateBtn.disabled = true;

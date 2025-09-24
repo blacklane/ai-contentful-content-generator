@@ -192,13 +192,11 @@ export const CONTENTFUL_HERO_SCHEMA = {
   aiFieldMapping: {
     title: 'name', // AI title -> Contentful name
     heading: 'name', // AI heading -> Contentful name
-    ctaText: 'ctaText', // Direct mapping
-    ctaLink: 'ctaTargetLink', // AI ctaLink -> Contentful ctaTargetLink
     imageAltText: 'imageAltText', // Direct mapping
   },
 
-  // Fields that AI can generate
-  aiGeneratedFields: ['name', 'ctaText', 'ctaTargetLink', 'imageAltText'],
+  // Fields that AI can generate (removed CTA fields)
+  aiGeneratedFields: ['name', 'imageAltText'],
 
   // Required fields for entry creation (imageUrl uses fallback to existing asset)
   requiredFields: [

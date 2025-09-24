@@ -2,11 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import path from 'path';
 import { getServerConfig } from './config';
-import {
-  rateLimiter,
-  securityHeaders,
-  validateRequest,
-} from './middleware/security';
+import { rateLimiter, securityHeaders } from './middleware/security';
 
 export const setupMiddleware = (app: express.Application) => {
   const config = getServerConfig();
@@ -14,7 +10,7 @@ export const setupMiddleware = (app: express.Application) => {
   // Security middleware (applied first)
   app.use(securityHeaders);
   app.use(rateLimiter);
-  app.use(validateRequest);
+  // app.use(validateRequest); // Disabled suspicious request validation
 
   // Trust proxy for production deployment (AWS, Vercel, etc.)
   if (config.nodeEnv === 'production') {

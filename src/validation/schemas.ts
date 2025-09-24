@@ -16,32 +16,38 @@ const keywordsValidator = (value: string) => {
     .map(k => k.trim())
     .filter(k => k.length > 0);
 
-  // Must have at least 3 keywords
-  if (keywords.length < 3) {
+  // Must have at least 1 keyword
+  if (keywords.length < 1) {
     return false;
   }
 
-  // Total word count across all keywords should be at least 3
+  // Total word count across all keywords should be at least 1
   const totalWords = keywords
     .join(' ')
     .split(/\s+/)
     .filter(word => word.length > 0);
-  return totalWords.length >= 3;
+  return totalWords.length >= 1;
 };
 
-// Validation schemas
-export const topicSchema = z
-  .string()
-  .min(1, 'Topic is required')
-  .refine(minWordsValidator(2), 'Topic must contain at least 2 words');
+// Validation schemas - topic removed, mainKeywords is now the primary identifier
 
-export const keywordsSchema = z
+export const mainKeywordsSchema = z
   .string()
-  .min(1, 'Keywords are required')
+  .min(1, 'Main keywords are required')
   .refine(
     keywordsValidator,
-    'Keywords must be comma-separated with at least 3 keywords total',
+    'Main keywords must be comma-separated with at least 1 keyword total',
   );
+
+export const secondaryKeywordsSchema = z
+  .string()
+  .min(1, 'Secondary keywords are required')
+  .refine(
+    value => keywordsValidator(value),
+    'Secondary keywords must be comma-separated',
+  );
+
+export const questionsSchema = z.string().optional();
 
 export const languageSchema = z.enum(['en', 'de', 'es', 'fr']).default('en');
 
@@ -58,8 +64,9 @@ export const contentTypesSchema = z
 
 // Main form validation schema
 export const generationRequestSchema = z.object({
-  topic: topicSchema,
-  keywords: keywordsSchema,
+  mainKeywords: mainKeywordsSchema,
+  secondaryKeywords: secondaryKeywordsSchema,
+  questions: questionsSchema,
   language: languageSchema,
   components: contentTypesSchema, // Accept 'components' field from frontend
   conversationContext: z
@@ -110,26 +117,40 @@ export function validateGenerationRequest(data: unknown): {
 }
 
 // Client-side validation helpers
-export function validateTopic(value: string): string | null {
+// Topic validation removed - using mainKeywords as primary identifier
+
+export function validateMainKeywords(value: string): string | null {
   try {
-    topicSchema.parse(value);
+    mainKeywordsSchema.parse(value);
     return null;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return error.issues[0]?.message || 'Invalid topic';
+      return error.issues[0]?.message || 'Invalid main keywords';
     }
-    return 'Invalid topic';
+    return 'Invalid main keywords';
   }
 }
 
-export function validateKeywords(value: string): string | null {
+export function validateSecondaryKeywords(value: string): string | null {
   try {
-    keywordsSchema.parse(value);
+    secondaryKeywordsSchema.parse(value);
     return null;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return error.issues[0]?.message || 'Invalid keywords';
+      return error.issues[0]?.message || 'Invalid secondary keywords';
     }
-    return 'Invalid keywords';
+    return 'Invalid secondary keywords';
+  }
+}
+
+export function validateQuestions(value: string): string | null {
+  try {
+    questionsSchema.parse(value);
+    return null;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return error.issues[0]?.message || 'Invalid questions';
+    }
+    return 'Invalid questions';
   }
 }

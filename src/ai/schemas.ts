@@ -11,9 +11,9 @@ export const getComponentSchemas = async (
       showTrustpilotWidget: false,
       showBookingWidget: true,
       isHourly: false,
-      cta: true,
-      ctaText: 'Book Your Ride',
-      ctaTargetLink: '/booking',
+      cta: false,
+      ctaText: '',
+      ctaTargetLink: '',
       imageAltText:
         'Professional chauffeur opening luxury car door for business client',
       onlyVideo: false,
@@ -50,8 +50,6 @@ export const getComponentSchemas = async (
         title: 'Revolutionize Your Business Operations Today',
         description:
           'Discover how our cutting-edge platform transforms the way modern businesses operate. With advanced automation, intelligent analytics, and seamless integrations, you can streamline workflows, reduce operational costs, and accelerate growth. Join thousands of satisfied customers who have already experienced the power of our comprehensive business solution.',
-        imageAltText:
-          'Modern office environment showing digital transformation in action',
         imagePosition: 'right',
         shortDescription:
           'Transform your business with cutting-edge platform solutions.',
@@ -59,9 +57,20 @@ export const getComponentSchemas = async (
     },
   };
 
-  return contentTypes
-    .map(type => schemas[type as keyof typeof schemas])
-    .filter(Boolean);
+  const result: ComponentSchema[] = [];
+
+  contentTypes.forEach(type => {
+    if (type === 'seoText') {
+      // Always generate exactly 3 seoText components
+      for (let i = 0; i < 3; i++) {
+        result.push(schemas.seoText);
+      }
+    } else if (schemas[type as keyof typeof schemas]) {
+      result.push(schemas[type as keyof typeof schemas]);
+    }
+  });
+
+  return result;
 };
 
 export const getFallbackSchemas = (
@@ -79,9 +88,9 @@ export const getFallbackSchemas = (
           showTrustpilotWidget: false,
           showBookingWidget: true,
           isHourly: false,
-          cta: true,
-          ctaText: 'string (5-30 chars)',
-          ctaTargetLink: 'string (URL)',
+          cta: false,
+          ctaText: '',
+          ctaTargetLink: '',
           imageAltText: 'string (10-125 chars)',
           onlyVideo: false,
           videoSources: [],
@@ -104,16 +113,18 @@ export const getFallbackSchemas = (
         });
         break;
       case 'seoText':
-        fallbackSchemas.push({
-          type: 'seoText',
-          content: {
-            title: 'string (10-80 chars)',
-            description: 'string (100-1000 chars)',
-            imageAltText: 'string (optional, 10-125 chars)',
-            imagePosition: 'string (left or right, optional)',
-            shortDescription: 'string (optional, max 400 chars)',
-          },
-        });
+        // Always generate exactly 3 seoText components
+        for (let i = 0; i < 3; i++) {
+          fallbackSchemas.push({
+            type: 'seoText',
+            content: {
+              title: 'string (10-80 chars)',
+              description: 'string (100-1000 chars)',
+              imagePosition: 'string (left or right, optional)',
+              shortDescription: 'string (optional, max 400 chars)',
+            },
+          });
+        }
         break;
       default:
         fallbackSchemas.push({

@@ -33,13 +33,6 @@ export function mapAISEOTextToContentful(
       content.imagePosition || CONTENTFUL_SEO_TEXT_SCHEMA.defaultValues.imageOn,
   };
 
-  // Set image alt text (optional, localized)
-  if (content.imageAltText) {
-    seoTextEntry.fields.imageAltText = {
-      [locale]: content.imageAltText,
-    };
-  }
-
   // Set small photo text (optional, localized)
   if (content.shortDescription) {
     seoTextEntry.fields.smallPhotoText = {
@@ -47,16 +40,8 @@ export function mapAISEOTextToContentful(
     };
   }
 
-  // Set default image (optional)
-  seoTextEntry.fields.imageUrl = {
-    [locale]: {
-      sys: {
-        type: 'Link',
-        linkType: 'Asset',
-        id: defaultImageAssetId,
-      },
-    },
-  };
+  // Note: imageUrl and imageAltText are intentionally not set
+  // Images should be manually assigned in Contentful interface
 
   // Set required boolean fields with defaults
   seoTextEntry.fields.isFrame = {

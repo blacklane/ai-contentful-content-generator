@@ -10,7 +10,6 @@ import {
   validateComponentData,
 } from './components.js';
 import { FEATURE_FLAGS } from './constants.js';
-import { initAIAssistant, sendAIMessage } from './js/ai-assistant.js';
 import { authManager } from './js/auth.js';
 import { generateContent } from './js/content-generation.js';
 import { elements } from './js/dom-elements.js';
@@ -67,7 +66,6 @@ const initApp = async (): Promise<void> => {
   setupReleaseEventListeners();
   checkServerStatus();
   updateButtonState();
-  initAIAssistant();
   applyFeatureFlags();
 };
 
@@ -131,20 +129,20 @@ const renderComponents = (): void => {
 
 // Event Listeners Setup
 const setupEventListeners = (): void => {
-  if (
-    !elements.projectTopic ||
-    !elements.projectKeywords ||
-    !elements.projectLanguage
-  ) {
+  if (!elements.projectMainKeywords || !elements.projectLanguage) {
     return;
   }
 
-  // Form inputs
-  elements.projectTopic.addEventListener('input', () => {
+  // Form inputs - topic removed
+  elements.projectMainKeywords.addEventListener('input', () => {
     updateProjectData(elements);
     validateStep1();
   });
-  elements.projectKeywords.addEventListener('input', () => {
+  elements.projectSecondaryKeywords?.addEventListener('input', () => {
+    updateProjectData(elements);
+    validateStep1();
+  });
+  elements.projectQuestions?.addEventListener('input', () => {
     updateProjectData(elements);
     validateStep1();
   });
@@ -161,7 +159,7 @@ const setupEventListeners = (): void => {
   elements.nextToGenerate?.addEventListener('click', generateContent);
   elements.nextToRelease?.addEventListener('click', () => {
     goToStep4();
-    selectReleaseMode('direct'); // Default to direct mode
+    selectReleaseMode('release'); // Default to release mode
     updateReleaseSummary();
   });
   elements.backToTopic?.addEventListener('click', goToStep1);
@@ -177,35 +175,38 @@ const setupEventListeners = (): void => {
   elements.resetBtn?.addEventListener('click', showResetModal);
   elements.publishBtn?.addEventListener('click', publishContent);
 
-  // AI Assistant
-  elements.aiSendBtn?.addEventListener('click', sendAIMessage);
-  elements.aiInput?.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      sendAIMessage();
-    }
-  });
-
   // Template buttons
   document.querySelectorAll('.template-btn').forEach(btn => {
     btn.addEventListener('click', function (this: HTMLElement, e: Event) {
       e.preventDefault();
 
-      const topic = this.getAttribute('data-topic');
-      const keywords = this.getAttribute('data-keywords');
+      const mainKeywords = this.getAttribute('data-main-keywords');
+      const secondaryKeywords = this.getAttribute('data-secondary-keywords');
+      const questions = this.getAttribute('data-questions');
 
-      if (!topic || !keywords) {
+      if (!mainKeywords) {
         return;
       }
 
-      hideFieldError('topic');
-      hideFieldError('keywords');
+      hideFieldError('mainKeywords');
+      hideFieldError('secondaryKeywords');
+      hideFieldError('questions');
 
-      if (elements.projectTopic && elements.projectKeywords) {
-        elements.projectTopic.value = topic;
-        elements.projectKeywords.value = keywords;
+      if (elements.projectMainKeywords) {
+        elements.projectMainKeywords.value = mainKeywords;
 
-        AppState.projectData.topic = topic;
-        AppState.projectData.keywords = keywords;
+        AppState.projectData.mainKeywords = mainKeywords;
+
+        if (secondaryKeywords && elements.projectSecondaryKeywords) {
+          elements.projectSecondaryKeywords.value = secondaryKeywords;
+          AppState.projectData.secondaryKeywords = secondaryKeywords;
+        }
+
+        if (questions && elements.projectQuestions) {
+          elements.projectQuestions.value = questions;
+          AppState.projectData.questions = questions;
+        }
+
         validateStep1();
       }
 
@@ -351,13 +352,15 @@ const selectReleaseMode = (mode: 'direct' | 'release'): void => {
 
   if (mode === 'release') {
     elements.releaseConfigForm?.classList.remove('hidden');
-    if (
-      !AppState.releaseConfig.title &&
-      AppState.projectData.topic &&
-      elements.releaseTitle
-    ) {
-      AppState.releaseConfig.title = `${AppState.projectData.topic} - Release`;
-      elements.releaseTitle.value = AppState.releaseConfig.title;
+    if (!AppState.releaseConfig.title && elements.releaseTitle) {
+      // Use page title (metaTitle) if available, otherwise fallback to main keywords
+      const pageTitle =
+        AppState.generatedContent?.metaTitle ||
+        AppState.projectData.mainKeywords;
+      if (pageTitle) {
+        AppState.releaseConfig.title = pageTitle;
+        elements.releaseTitle.value = AppState.releaseConfig.title;
+      }
     }
     updateReleaseSummary();
   } else {
@@ -411,7 +414,8 @@ const updatePublishingSummary = (): void => {
 const updateButtonState = (): void => {
   updateProjectData(elements);
   const hasContent =
-    AppState.projectData.topic.trim() && AppState.projectData.keywords.trim();
+    AppState.projectData.mainKeywords.trim() &&
+    AppState.projectData.secondaryKeywords.trim();
 
   if (elements.nextToComponents) {
     elements.nextToComponents.disabled = !hasContent;
@@ -566,24 +570,25 @@ const publishContent = async (): Promise<void> => {
 const performReset = (): void => {
   resetAppState();
 
-  if (elements.projectTopic) {
-    elements.projectTopic.value = '';
+  if (elements.projectMainKeywords) {
+    elements.projectMainKeywords.value = '';
   }
-  if (elements.projectKeywords) {
-    elements.projectKeywords.value = '';
+  if (elements.projectSecondaryKeywords) {
+    elements.projectSecondaryKeywords.value = '';
+  }
+  if (elements.projectQuestions) {
+    elements.projectQuestions.value = '';
   }
   if (elements.projectLanguage) {
     elements.projectLanguage.value = 'en';
-  }
-  if (elements.aiConversation) {
-    elements.aiConversation.innerHTML = '';
   }
   if (elements.releaseTitle) {
     elements.releaseTitle.value = '';
   }
 
-  hideFieldError('topic');
-  hideFieldError('keywords');
+  hideFieldError('mainKeywords');
+  hideFieldError('secondaryKeywords');
+  hideFieldError('questions');
 
   document
     .querySelectorAll('.component-card input[type="checkbox"]')
@@ -687,15 +692,6 @@ const applyFeatureFlags = (): void => {
   if (quickStartSection) {
     if (!FEATURE_FLAGS.SHOW_QUICK_START_TEMPLATES) {
       quickStartSection.style.display = 'none';
-    }
-  }
-
-  const aiAssistantPanel = document.getElementById('aiAssistantPanel');
-  if (aiAssistantPanel) {
-    if (!FEATURE_FLAGS.SHOW_AI_ASSISTANT) {
-      aiAssistantPanel.style.display = 'none';
-    } else {
-      aiAssistantPanel.style.display = 'block';
     }
   }
 

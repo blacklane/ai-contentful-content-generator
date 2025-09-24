@@ -42,9 +42,15 @@ export const publishContentRoute = async (req: Request, res: Response) => {
     let publishResult;
 
     if (releaseMode === 'release' && releaseConfig) {
+      // Use provided release title, or fallback to page metaTitle, or final fallback
+      const releaseTitle =
+        releaseConfig.title ||
+        generatedContent.metaTitle ||
+        'AI Generated Page Release';
+
       publishResult = await publisher.publishPageAsRelease(
         generatedContent,
-        releaseConfig.title || 'AI Generated Page Release',
+        releaseTitle,
         {
           imageUrls,
         },

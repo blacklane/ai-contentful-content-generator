@@ -170,76 +170,6 @@
             </div>
           </div>
 
-          <!-- AI Assistant Panel - Full Width Above Form -->
-          <div id="aiAssistantPanel" class="mb-8">
-            <div
-              class="p-6 bg-cursor-bg rounded-lg border border-cursor-border"
-            >
-              <h3
-                class="text-lg font-semibold text-cursor-text mb-4 flex items-center gap-3"
-              >
-                <div
-                  class="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center"
-                >
-                  <svg
-                    class="w-4 h-4 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                    ></path>
-                  </svg>
-                </div>
-                AI Content Assistant
-              </h3>
-              <div
-                id="aiConversation"
-                class="space-y-4 max-h-80 min-h-40 overflow-y-auto scrollbar-hide bg-cursor-sidebar rounded-lg p-4 border border-cursor-border"
-              >
-                <!-- AI conversation will appear here -->
-              </div>
-              <!-- Loading indicator (hidden by default) -->
-              <div
-                id="aiLoadingIndicator"
-                class="hidden flex items-center gap-2 mt-3 text-cursor-muted text-sm"
-              >
-                <div class="flex space-x-1">
-                  <div
-                    class="w-2 h-2 bg-cursor-accent rounded-full animate-bounce"
-                  ></div>
-                  <div
-                    class="w-2 h-2 bg-cursor-accent rounded-full animate-bounce"
-                    style="animation-delay: 0.1s"
-                  ></div>
-                  <div
-                    class="w-2 h-2 bg-cursor-accent rounded-full animate-bounce"
-                    style="animation-delay: 0.2s"
-                  ></div>
-                </div>
-                AI is thinking...
-              </div>
-              <div class="mt-4 flex gap-3">
-                <input
-                  type="text"
-                  id="aiInput"
-                  placeholder="Ask AI for content strategy advice..."
-                  class="input input-bordered flex-1"
-                />
-                <button
-                  id="aiSendBtn"
-                  class="btn cursor-gradient disabled:text-white text-white hover:opacity-90"
-                >
-                  Send
-                </button>
-              </div>
-            </div>
-          </div>
-
           <!-- Quick Templates -->
           <div id="quickStartTemplatesSection" class="mt-8 mb-8">
             <div class="flex items-center gap-3 mb-4">
@@ -274,7 +204,9 @@
               <button
                 class="template-btn btn btn-ghost btn-sm h-auto p-2 flex-col gap-1"
                 data-topic="Luxury Chauffeur Service in Berlin"
-                data-keywords="luxury chauffeur, premium car service, Berlin airport transfer, professional driver, VIP transport"
+                data-main-keywords="luxury chauffeur, premium car service, Berlin airport transfer, professional driver, VIP transport"
+                data-secondary-keywords="executive travel, business class, luxury vehicles"
+                data-questions="What makes our chauffeur service premium? How do we ensure punctuality? What vehicle types do we offer?"
               >
                 <span class="text-lg">🚗</span>
                 <span class="text-xs text-center">Luxury Transport</span>
@@ -283,7 +215,9 @@
               <button
                 class="template-btn btn btn-ghost btn-sm h-auto p-2 flex-col gap-1"
                 data-topic="Corporate Business Travel Solutions"
-                data-keywords="corporate travel, business transportation, executive services, meeting transfers, company transport"
+                data-main-keywords="corporate travel, business transportation, executive services, meeting transfers, company transport"
+                data-secondary-keywords="enterprise solutions, team transport, business efficiency"
+                data-questions="How do we support corporate clients? What are our business packages? How do we handle group bookings?"
               >
                 <span class="text-lg">💼</span>
                 <span class="text-xs text-center">Business Travel</span>
@@ -292,7 +226,9 @@
               <button
                 class="template-btn btn btn-ghost btn-sm h-auto p-2 flex-col gap-1"
                 data-topic="Professional Airport Transfer Services"
-                data-keywords="airport transfer, flight pickup, baggage assistance, reliable transport, travel logistics"
+                data-main-keywords="airport transfer, flight pickup, baggage assistance, reliable transport, travel logistics"
+                data-secondary-keywords="flight tracking, meet and greet, door to door"
+                data-questions="How do we track flights? What happens if flights are delayed? Do we offer meet and greet services?"
               >
                 <span class="text-lg">✈️</span>
                 <span class="text-xs text-center">Airport Transfer</span>
@@ -301,7 +237,9 @@
               <button
                 class="template-btn btn btn-ghost btn-sm h-auto p-2 flex-col gap-1"
                 data-topic="Premium Event Transportation Services"
-                data-keywords="event transport, wedding cars, special occasions, group travel, celebration transport"
+                data-main-keywords="event transport, wedding cars, special occasions, group travel, celebration transport"
+                data-secondary-keywords="luxury weddings, corporate events, party transport"
+                data-questions="What vehicles are available for events? How do we handle large groups? What are our wedding packages?"
               >
                 <span class="text-lg">🎉</span>
                 <span class="text-xs text-center">Event Transport</span>
@@ -310,7 +248,9 @@
               <button
                 class="template-btn btn btn-ghost btn-sm h-auto p-2 flex-col gap-1"
                 data-topic="City Tourism and Sightseeing Transport"
-                data-keywords="city tours, sightseeing transport, tourist services, guided tours, cultural experiences"
+                data-main-keywords="city tours, sightseeing transport, tourist services, guided tours, cultural experiences"
+                data-secondary-keywords="local attractions, cultural sites, tourist packages"
+                data-questions="What attractions do we visit? Do we provide tour guides? What are our tourism packages?"
               >
                 <span class="text-lg">🏛️</span>
                 <span class="text-xs text-center">Tourism</span>
@@ -323,29 +263,55 @@
             <div class="lg:col-span-2 space-y-6">
               <div class="space-y-2">
                 <label class="text-sm font-medium text-cursor-text"
-                  >Page Topic *</label
+                  >Main Keywords *</label
                 >
-                <input
-                  type="text"
-                  id="projectTopic"
-                  placeholder="e.g., Luxury Airport Transfer Service in Berlin"
-                  class="input input-bordered w-full"
-                />
-                <div id="topicError" class="text-error text-xs hidden"></div>
+                <textarea
+                  id="projectMainKeywords"
+                  placeholder=""
+                  class="textarea textarea-bordered w-full h-24 resize-none"
+                ></textarea>
+                <div
+                  id="mainKeywordsError"
+                  class="text-error text-xs hidden"
+                ></div>
+                <p class="text-xs text-cursor-muted">
+                  Separate main keywords with commas
+                </p>
               </div>
 
               <div class="space-y-2">
                 <label class="text-sm font-medium text-cursor-text"
-                  >Keywords *</label
+                  >Secondary Keywords *</label
                 >
                 <textarea
-                  id="projectKeywords"
-                  placeholder="e.g., airport transfer, luxury car service, professional drivers, Berlin transport"
+                  id="projectSecondaryKeywords"
+                  placeholder=""
+                  class="textarea textarea-bordered w-full h-20 resize-none"
+                ></textarea>
+                <div
+                  id="secondaryKeywordsError"
+                  class="text-error text-xs hidden"
+                ></div>
+                <p class="text-xs text-cursor-muted">
+                  Secondary keywords, separate with commas
+                </p>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-sm font-medium text-cursor-text"
+                  >Questions (optional)</label
+                >
+                <textarea
+                  id="projectQuestions"
+                  placeholder=""
                   class="textarea textarea-bordered w-full h-24 resize-none"
                 ></textarea>
-                <div id="keywordsError" class="text-error text-xs hidden"></div>
+                <div
+                  id="questionsError"
+                  class="text-error text-xs hidden"
+                ></div>
                 <p class="text-xs text-cursor-muted">
-                  Separate keywords with commas (at least 3 required)
+                  Questions to address in the content
                 </p>
               </div>
 
@@ -613,41 +579,7 @@
               Publishing Method
             </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Direct Publish Option -->
-              <div
-                class="release-mode-card cursor-pointer p-4 rounded-lg border-2 border-cursor-border hover:border-cursor-accent transition-all"
-                data-mode="direct"
-              >
-                <div class="flex items-center gap-3 mb-3">
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center"
-                  >
-                    <svg
-                      class="w-4 h-4 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      ></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 class="font-medium text-cursor-text">Direct Publish</h4>
-                    <p class="text-xs text-cursor-muted">Create as drafts</p>
-                  </div>
-                </div>
-                <p class="text-sm text-cursor-muted">
-                  Components will be created in Contentful as draft entries. You
-                  can review and publish them manually later.
-                </p>
-              </div>
-
-              <!-- Release Option -->
+              <!-- Contentful Release Option (now first) -->
               <div
                 class="release-mode-card cursor-pointer p-4 rounded-lg border-2 border-cursor-border hover:border-cursor-accent transition-all"
                 data-mode="release"
@@ -682,6 +614,40 @@
                 <p class="text-sm text-cursor-muted">
                   Create a release in Contentful for organized content
                   management.
+                </p>
+              </div>
+
+              <!-- Direct Publish Option (now second) -->
+              <div
+                class="release-mode-card cursor-pointer p-4 rounded-lg border-2 border-cursor-border hover:border-cursor-accent transition-all"
+                data-mode="direct"
+              >
+                <div class="flex items-center gap-3 mb-3">
+                  <div
+                    class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-4 h-4 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 class="font-medium text-cursor-text">Direct Publish</h4>
+                    <p class="text-xs text-cursor-muted">Create as drafts</p>
+                  </div>
+                </div>
+                <p class="text-sm text-cursor-muted">
+                  Components will be created in Contentful as draft entries. You
+                  can review and publish them manually later.
                 </p>
               </div>
             </div>

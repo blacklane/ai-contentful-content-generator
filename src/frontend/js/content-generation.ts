@@ -1,17 +1,17 @@
 import { elements } from './dom-elements.js';
 import { httpClient } from './http-client.js';
 import { showResultModal } from './modals.js';
-import { type AIMessage, AppState, updateProjectData } from './state.js';
+import { AppState, updateProjectData } from './state.js';
 import { goToStep3 } from './step-management.js';
 
 // Content Generation Functions with TypeScript types
 
 interface GenerationRequest {
-  topic: string;
-  keywords: string;
+  mainKeywords: string;
+  secondaryKeywords: string;
+  questions?: string;
   language: string;
   components: string[];
-  conversationContext: AIMessage[];
 }
 
 export const generateContent = async (): Promise<void> => {
@@ -37,11 +37,11 @@ export const generateContent = async (): Promise<void> => {
     updateProjectData(elements);
 
     const requestBody: GenerationRequest = {
-      topic: AppState.projectData.topic,
-      keywords: AppState.projectData.keywords,
+      mainKeywords: AppState.projectData.mainKeywords,
+      secondaryKeywords: AppState.projectData.secondaryKeywords,
+      questions: AppState.projectData.questions,
       language: AppState.projectData.language,
       components: AppState.projectData.components,
-      conversationContext: AppState.projectData.aiConversation,
     };
 
     const result = await httpClient.generateContent(requestBody);

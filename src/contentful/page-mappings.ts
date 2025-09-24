@@ -6,9 +6,11 @@ import {
 
 // AI Generated data structure for page
 export interface AIGeneratedPageData {
-  topic: string;
-  keywords: string;
+  mainKeywords: string;
+  secondaryKeywords: string;
   language: string;
+  metaTitle?: string;
+  metaDescription?: string;
   generatedSections: Array<{
     type: string;
     [key: string]: any;
@@ -22,8 +24,8 @@ export function mapAIDataToContentfulPage(
   locale: string = 'en-US',
 ): any {
   console.log('🔍 Mapping AI data to page:', {
-    topic: aiData.topic,
-    keywords: aiData.keywords,
+    mainKeywords: aiData.mainKeywords,
+    secondaryKeywords: aiData.secondaryKeywords,
     language: aiData.language,
     sectionsCount: aiData.generatedSections?.length || 0,
     componentIds: componentIds.length,
@@ -33,27 +35,22 @@ export function mapAIDataToContentfulPage(
     fields: {},
   };
 
-  // Generate page title from topic
+  // Use AI-generated meta title or fallback to main keywords
   contentfulEntry.fields.title = {
-    [locale]: aiData.topic,
+    [locale]: aiData.metaTitle || aiData.mainKeywords,
   };
 
-  // Generate meta description with safe keywords handling
+  // Use AI-generated meta description or fallback to generated one
   contentfulEntry.fields.description = {
-    [locale]: generateMetaDescription(aiData.topic, aiData.keywords),
+    [locale]:
+      aiData.metaDescription ||
+      generateMetaDescription(aiData.mainKeywords, aiData.secondaryKeywords),
   };
 
   // Generate URL path
   contentfulEntry.fields.urlPath = {
-    [locale]: generateUrlPath(aiData.topic),
+    [locale]: generateUrlPath(aiData.mainKeywords),
   };
-
-  // Set keywords (not localized according to schema)
-  if (aiData.keywords) {
-    contentfulEntry.fields.keywords = {
-      [locale]: aiData.keywords, // Using locale for consistency with other fields
-    };
-  }
 
   // Add component references to sections
   if (componentIds.length > 0) {

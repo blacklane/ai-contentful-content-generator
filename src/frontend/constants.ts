@@ -44,13 +44,13 @@ export const FEATURE_FLAGS: FeatureFlags = {
     typeof process !== 'undefined' && process.env && process.env.NODE_ENV
       ? process.env.NODE_ENV === 'development'
       : true, // Default to true if environment is unknown
-  SHOW_AI_ASSISTANT: true,
+  SHOW_AI_ASSISTANT: false,
   SHOW_PROGRESS_SIDEBAR: true,
 };
 
 export const VALIDATION_CONSTANTS: ValidationConstants = {
   MAX_TOPIC_LENGTH: 200,
-  MIN_KEYWORDS_COUNT: 3,
+  MIN_KEYWORDS_COUNT: 1,
   MAX_KEYWORDS_COUNT: 50,
 };
 
@@ -58,7 +58,7 @@ export const ERROR_MESSAGES: ErrorMessages = {
   TOPIC_REQUIRED: 'Topic is required',
   TOPIC_TOO_LONG: `Topic must be less than ${VALIDATION_CONSTANTS.MAX_TOPIC_LENGTH} characters`,
   KEYWORDS_REQUIRED: 'Keywords are required',
-  KEYWORDS_TOO_FEW: `At least ${VALIDATION_CONSTANTS.MIN_KEYWORDS_COUNT} keywords are required`,
+  KEYWORDS_TOO_FEW: `At least ${VALIDATION_CONSTANTS.MIN_KEYWORDS_COUNT} keyword is required`,
   KEYWORDS_TOO_MANY: `Maximum ${VALIDATION_CONSTANTS.MAX_KEYWORDS_COUNT} keywords allowed`,
   GENERATION_FAILED: 'Content generation failed. Please try again.',
   NETWORK_ERROR: 'Network error. Please check your connection.',

@@ -20,15 +20,16 @@ export interface HealthCheckResponse {
 }
 
 export interface GenerationRequest {
-  topic: string;
-  keywords: string;
+  mainKeywords: string;
+  secondaryKeywords: string;
+  questions?: string;
   components: string[];
   language: string;
   conversationContext?: Array<{ role: string; content: string }>;
 }
 
 export interface PublishingRequest {
-  generatedContent: any;
+  generatedContent: Record<string, unknown>;
   releaseMode?: string;
   releaseConfig?: {
     title: string;

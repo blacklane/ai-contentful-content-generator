@@ -21,10 +21,11 @@ export interface ComponentConfig {
 
 export interface ProjectData {
   topic: string;
-  keywords: string;
+  mainKeywords: string;
+  secondaryKeywords: string;
+  questions: string;
   language: string;
   components: string[];
-  aiConversation: Array<{ role: string; content: string }>;
 }
 
 export interface ReleaseConfig {

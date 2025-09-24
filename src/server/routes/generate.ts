@@ -17,8 +17,14 @@ export const generateContentRoute = async (req: Request, res: Response) => {
       });
     }
 
-    const { topic, keywords, components, language, conversationContext } =
-      validation.data! as GenerationRequest;
+    const {
+      mainKeywords,
+      secondaryKeywords,
+      questions,
+      components,
+      language,
+      conversationContext,
+    } = validation.data! as GenerationRequest;
 
     const isConnected = await testConnection();
     if (!isConnected) {
@@ -35,8 +41,9 @@ export const generateContentRoute = async (req: Request, res: Response) => {
     ];
 
     const aiResponse = await generateContent({
-      topic,
-      keywords,
+      mainKeywords,
+      secondaryKeywords,
+      questions,
       contentTypes: contentTypesWithHero,
       language: language || 'en',
       conversationContext,
@@ -57,7 +64,13 @@ export const generateContentRoute = async (req: Request, res: Response) => {
         generated: parsedContent,
         usage: aiResponse.usage,
         timestamp: new Date().toISOString(),
-        params: { topic, keywords, contentTypes: components, language },
+        params: {
+          mainKeywords,
+          secondaryKeywords,
+          questions,
+          contentTypes: components,
+          language,
+        },
       },
     });
   } catch (error: any) {

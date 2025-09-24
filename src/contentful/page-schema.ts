@@ -176,13 +176,12 @@ export const CONTENTFUL_PAGE_SCHEMA = {
   // Mapping AI topic/content to page fields
   aiFieldMapping: {
     topic: 'title', // AI topic -> page title
-    keywords: 'keywords', // AI keywords -> meta keywords
     // URL will be generated from topic
     // Description will be generated from topic
   },
 
   // Fields that AI can generate
-  aiGeneratedFields: ['title', 'description', 'urlPath', 'keywords'],
+  aiGeneratedFields: ['title', 'description', 'urlPath'],
 
   // Required fields for page creation
   requiredFields: [
@@ -229,13 +228,13 @@ export const CONTENTFUL_PAGE_SCHEMA = {
   },
 };
 
-// Helper to generate URL path from topic
-export function generateUrlPath(topic: string): string {
-  // Fallback if topic is undefined or empty
-  const safeTopic = topic || 'page';
+// Helper to generate URL path from main keywords
+export function generateUrlPath(mainKeywords: string): string {
+  // Fallback if mainKeywords is undefined or empty
+  const safeKeywords = mainKeywords || 'page';
 
   return `/${
-    safeTopic
+    safeKeywords
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
       .replace(/\s+/g, '-') // Replace spaces with hyphens
@@ -244,29 +243,29 @@ export function generateUrlPath(topic: string): string {
   }/`;
 }
 
-// Helper to generate meta description from topic and keywords
+// Helper to generate meta description from main keywords and secondary keywords
 export function generateMetaDescription(
-  topic: string,
-  keywords?: string,
+  mainKeywords: string,
+  secondaryKeywords?: string,
 ): string {
-  // Fallback if topic is undefined or empty
-  const safeTopic = topic || 'our services';
+  // Fallback if mainKeywords is undefined or empty
+  const safeMainKeywords = mainKeywords || 'our services';
 
-  if (!keywords || keywords.trim() === '') {
-    return `Discover ${safeTopic.toLowerCase()}. Professional services designed to meet your needs.`;
+  if (!secondaryKeywords || secondaryKeywords.trim() === '') {
+    return `Discover ${safeMainKeywords.toLowerCase()}. Professional services designed to meet your needs.`;
   }
 
-  const keywordArray = keywords
+  const secondaryKeywordArray = secondaryKeywords
     .split(',')
     .map(k => k.trim())
     .filter(k => k.length > 0)
     .slice(0, 3);
 
-  if (keywordArray.length === 0) {
-    return `Discover ${topic.toLowerCase()}. Professional services designed to meet your needs.`;
+  if (secondaryKeywordArray.length === 0) {
+    return `Discover ${safeMainKeywords.toLowerCase()}. Professional services designed to meet your needs.`;
   }
 
-  return `Discover ${topic.toLowerCase()} with ${keywordArray.join(', ')}. Professional services designed to meet your needs.`;
+  return `Discover ${safeMainKeywords.toLowerCase()} with ${secondaryKeywordArray.join(', ')}. Professional services designed to meet your needs.`;
 }
 
 export default CONTENTFUL_PAGE_SCHEMA;
