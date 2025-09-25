@@ -555,15 +555,12 @@ export class ContentfulPublisher {
       const pageData = aiGeneratedData.generated || aiGeneratedData;
 
       // Ensure required fields exist with fallbacks
-      if (!pageData.topic) {
-        pageData.topic = 'AI Generated Page';
-      }
       if (!pageData.language) {
         pageData.language = 'en';
       }
 
       console.log('🔍 Page data extracted:', {
-        topic: pageData.topic,
+        mainKeywords: pageData.mainKeywords,
         language: pageData.language,
         hasMetadata: !!pageData.metadata,
         metadataKeys: pageData.metadata ? Object.keys(pageData.metadata) : [],
@@ -590,11 +587,11 @@ export class ContentfulPublisher {
         );
         sections.unshift({
           type: 'hero',
-          title: pageData.topic || 'Premium Service',
-          subtitle: `Discover our ${pageData.topic?.toLowerCase() || 'premium service'}`,
+          title: pageData.mainKeywords || 'Premium Service',
+          subtitle: `Discover our ${pageData.mainKeywords?.toLowerCase() || 'premium service'}`,
           ctaText: 'Get Started',
           ctaLink: '/contact',
-          imageAltText: `${pageData.topic || 'Premium service'} hero image`,
+          imageAltText: `${pageData.mainKeywords || 'Premium service'} hero image`,
         });
       }
 

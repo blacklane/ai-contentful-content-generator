@@ -30,8 +30,7 @@ export interface GenerationRequest {
 
 export interface PublishingRequest {
   generatedContent: Record<string, unknown>;
-  releaseMode?: string;
-  releaseConfig?: {
+  releaseConfig: {
     title: string;
     publishImmediately?: boolean;
     draftOnly?: boolean;

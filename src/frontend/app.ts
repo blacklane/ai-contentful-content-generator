@@ -159,7 +159,7 @@ const setupEventListeners = (): void => {
   elements.nextToGenerate?.addEventListener('click', generateContent);
   elements.nextToRelease?.addEventListener('click', () => {
     goToStep4();
-    selectReleaseMode('release'); // Default to release mode
+    selectReleaseMode(); // Always use release mode
     updateReleaseSummary();
   });
   elements.backToTopic?.addEventListener('click', goToStep1);
@@ -174,45 +174,6 @@ const setupEventListeners = (): void => {
   // Actions
   elements.resetBtn?.addEventListener('click', showResetModal);
   elements.publishBtn?.addEventListener('click', publishContent);
-
-  // Template buttons
-  document.querySelectorAll('.template-btn').forEach(btn => {
-    btn.addEventListener('click', function (this: HTMLElement, e: Event) {
-      e.preventDefault();
-
-      const mainKeywords = this.getAttribute('data-main-keywords');
-      const secondaryKeywords = this.getAttribute('data-secondary-keywords');
-      const questions = this.getAttribute('data-questions');
-
-      if (!mainKeywords) {
-        return;
-      }
-
-      hideFieldError('mainKeywords');
-      hideFieldError('secondaryKeywords');
-      hideFieldError('questions');
-
-      if (elements.projectMainKeywords) {
-        elements.projectMainKeywords.value = mainKeywords;
-
-        AppState.projectData.mainKeywords = mainKeywords;
-
-        if (secondaryKeywords && elements.projectSecondaryKeywords) {
-          elements.projectSecondaryKeywords.value = secondaryKeywords;
-          AppState.projectData.secondaryKeywords = secondaryKeywords;
-        }
-
-        if (questions && elements.projectQuestions) {
-          elements.projectQuestions.value = questions;
-          AppState.projectData.questions = questions;
-        }
-
-        validateStep1();
-      }
-
-      showTemplateFeedback(this);
-    });
-  });
 
   // Mobile menu
   elements.mobileMenuBtn?.addEventListener('click', toggleMobileMenu);
@@ -270,14 +231,7 @@ const setupComponentEventListeners = (): void => {
 
 // Release Event Listeners
 const setupReleaseEventListeners = (): void => {
-  document.querySelectorAll('.release-mode-card').forEach(card => {
-    card.addEventListener('click', function (this: HTMLElement) {
-      const mode = this.getAttribute('data-mode') as 'direct' | 'release';
-      if (mode) {
-        selectReleaseMode(mode);
-      }
-    });
-  });
+  // Release mode is now always selected automatically
 
   elements.releaseTitle?.addEventListener(
     'input',
@@ -340,32 +294,24 @@ const updateComponentCardVisual = (
 };
 
 // Release Management
-const selectReleaseMode = (mode: 'direct' | 'release'): void => {
-  AppState.releaseConfig.mode = mode;
+const selectReleaseMode = (): void => {
+  AppState.releaseConfig.mode = 'release';
 
   document.querySelectorAll('.release-mode-card').forEach(card => {
-    card.classList.remove('release-mode-selected');
+    card.classList.add('release-mode-selected');
   });
 
-  const modeCard = document.querySelector(`[data-mode="${mode}"]`);
-  modeCard?.classList.add('release-mode-selected');
-
-  if (mode === 'release') {
-    elements.releaseConfigForm?.classList.remove('hidden');
-    if (!AppState.releaseConfig.title && elements.releaseTitle) {
-      // Use page title (metaTitle) if available, otherwise fallback to main keywords
-      const pageTitle =
-        AppState.generatedContent?.metaTitle ||
-        AppState.projectData.mainKeywords;
-      if (pageTitle) {
-        AppState.releaseConfig.title = pageTitle;
-        elements.releaseTitle.value = AppState.releaseConfig.title;
-      }
+  elements.releaseConfigForm?.classList.remove('hidden');
+  if (!AppState.releaseConfig.title && elements.releaseTitle) {
+    // Use page title (metaTitle) if available, otherwise fallback to main keywords
+    const pageTitle =
+      AppState.generatedContent?.metaTitle || AppState.projectData.mainKeywords;
+    if (pageTitle) {
+      AppState.releaseConfig.title = pageTitle;
+      elements.releaseTitle.value = AppState.releaseConfig.title;
     }
-    updateReleaseSummary();
-  } else {
-    elements.releaseConfigForm?.classList.add('hidden');
   }
+  updateReleaseSummary();
 };
 
 const updateReleaseSummary = (): void => {
@@ -384,28 +330,15 @@ const updatePublishingSummary = (): void => {
     return;
   }
 
-  const mode = AppState.releaseConfig.mode;
   const componentCount = AppState.projectData.components.length;
+  const title = AppState.releaseConfig.title || 'Untitled Release';
 
-  let summary = '';
-
-  if (mode === 'direct') {
-    summary = `
-      <div class="text-cursor-text">📄 Direct Publishing Mode</div>
-      <div class="text-cursor-muted">• ${componentCount} components will be created as drafts</div>
-      <div class="text-cursor-muted">• You can review and publish them manually in Contentful</div>
-    `;
-  } else {
-    const title = AppState.releaseConfig.title || 'Untitled Release';
-
-    summary = `
-      <div class="text-cursor-text">🚀 Release Mode: "${title}"</div>
-      <div class="text-cursor-muted">• ${componentCount} components will be grouped in a release</div>
-      <div class="text-cursor-muted">• Release will be managed in Contentful</div>
-    `;
-
-    summary += '<div class="text-cursor-muted">• Will be saved as draft</div>';
-  }
+  const summary = `
+    <div class="text-cursor-text">🚀 Release Mode: "${title}"</div>
+    <div class="text-cursor-muted">• ${componentCount} components will be grouped in a release</div>
+    <div class="text-cursor-muted">• Release will be managed in Contentful</div>
+    <div class="text-cursor-muted">• Will be saved as draft</div>
+  `;
 
   elements.publishingSummary.innerHTML = summary;
 };
@@ -434,48 +367,16 @@ const updateButtonState = (): void => {
   }
 };
 
-const showTemplateFeedback = (button: HTMLElement): void => {
-  const feedback = document.createElement('div');
-  feedback.className =
-    'absolute top-2 right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center transform scale-0 transition-transform duration-200';
-  feedback.innerHTML = `
-    <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
-    </svg>
-  `;
-
-  const card = button.closest('.template-card') as HTMLElement;
-  if (card) {
-    card.style.position = 'relative';
-    card.appendChild(feedback);
-
-    setTimeout(() => {
-      feedback.classList.add('scale-100');
-    }, 50);
-
-    setTimeout(() => {
-      feedback.classList.remove('scale-100');
-      setTimeout(() => {
-        if (feedback.parentNode) {
-          feedback.parentNode.removeChild(feedback);
-        }
-      }, 200);
-    }, 1500);
-  }
-};
-
 // Publishing Functions
 interface PublishPayload {
   generatedContent: any;
-  releaseMode: 'direct' | 'release';
+  releaseMode: 'release';
   imageUrls: Record<string, string>;
-  releaseConfig?: {
+  releaseConfig: {
     title: string;
     publishImmediately: boolean;
     draftOnly: boolean;
   };
-  publishImmediately?: boolean;
-  draftOnly?: boolean;
 }
 
 const publishContent = async (): Promise<void> => {
@@ -497,20 +398,14 @@ const publishContent = async (): Promise<void> => {
     const releaseConfig = AppState.releaseConfig;
     const publishPayload: PublishPayload = {
       generatedContent: AppState.generatedContent,
-      releaseMode: releaseConfig.mode,
+      releaseMode: 'release',
       imageUrls: {},
-    };
-
-    if (releaseConfig.mode === 'release') {
-      publishPayload.releaseConfig = {
+      releaseConfig: {
         title: releaseConfig.title,
         publishImmediately: false,
         draftOnly: true,
-      };
-    } else {
-      publishPayload.publishImmediately = false;
-      publishPayload.draftOnly = true;
-    }
+      },
+    };
 
     const result = await httpClient.publishContent(publishPayload);
 
@@ -686,15 +581,6 @@ const checkServerStatus = async (): Promise<void> => {
 
 // Feature Flags
 const applyFeatureFlags = (): void => {
-  const quickStartSection = document.getElementById(
-    'quickStartTemplatesSection',
-  );
-  if (quickStartSection) {
-    if (!FEATURE_FLAGS.SHOW_QUICK_START_TEMPLATES) {
-      quickStartSection.style.display = 'none';
-    }
-  }
-
   const sidebar = document.getElementById('sidebar');
   if (sidebar) {
     if (!FEATURE_FLAGS.SHOW_PROGRESS_SIDEBAR) {

@@ -70,7 +70,7 @@ export const CONTENTFUL_SEO_TEXT_SCHEMA = {
             'The maximum number of characters in preview should not pass 170!',
         },
       ],
-      aiGenerated: true,
+      aiGenerated: false,
       description: 'Short photo description text',
     },
 
@@ -177,7 +177,7 @@ export const CONTENTFUL_SEO_TEXT_SCHEMA = {
       localized: false,
       required: false,
       aiGenerated: false,
-      default: 'seo-text',
+      default: '',
       description: 'Anchor element ID for navigation',
     },
 
@@ -227,7 +227,7 @@ export const CONTENTFUL_SEO_TEXT_SCHEMA = {
   },
 
   // Fields that AI can generate
-  aiGeneratedFields: ['imageOn', 'title', 'description', 'smallPhotoText'],
+  aiGeneratedFields: ['imageOn', 'title', 'description'],
 
   // Required fields for component creation
   requiredFields: ['imageOn', 'title', 'isFrame', 'isThicker'],
@@ -237,7 +237,7 @@ export const CONTENTFUL_SEO_TEXT_SCHEMA = {
     imageOn: 'right',
     isFrame: false,
     isThicker: false,
-    anchorElementId: 'seo-text',
+    anchorElementId: '',
     smallPhotoTextBlock: false,
     isVideo: false,
   },
@@ -251,7 +251,6 @@ export interface AIGeneratedSEOText {
   title: string;
   description: string;
   imagePosition?: 'left' | 'right';
-  shortDescription?: string; // For smallPhotoText
 }
 
 export interface AIGeneratedSEOTextSection {

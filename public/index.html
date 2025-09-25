@@ -170,94 +170,6 @@
             </div>
           </div>
 
-          <!-- Quick Templates -->
-          <div id="quickStartTemplatesSection" class="mt-8 mb-8">
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center"
-              >
-                <svg
-                  class="w-4 h-4 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  ></path>
-                </svg>
-              </div>
-              <div>
-                <h3 class="text-lg font-semibold text-cursor-text">
-                  Quick Start Templates [dev only]
-                </h3>
-                <p class="text-sm text-cursor-muted">
-                  Choose a template to auto-fill your project details
-                </p>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 lg:grid-cols-5 gap-2">
-              <button
-                class="template-btn btn btn-ghost btn-sm h-auto p-2 flex-col gap-1"
-                data-topic="Luxury Chauffeur Service in Berlin"
-                data-main-keywords="luxury chauffeur, premium car service, Berlin airport transfer, professional driver, VIP transport"
-                data-secondary-keywords="executive travel, business class, luxury vehicles"
-                data-questions="What makes our chauffeur service premium? How do we ensure punctuality? What vehicle types do we offer?"
-              >
-                <span class="text-lg">🚗</span>
-                <span class="text-xs text-center">Luxury Transport</span>
-              </button>
-
-              <button
-                class="template-btn btn btn-ghost btn-sm h-auto p-2 flex-col gap-1"
-                data-topic="Corporate Business Travel Solutions"
-                data-main-keywords="corporate travel, business transportation, executive services, meeting transfers, company transport"
-                data-secondary-keywords="enterprise solutions, team transport, business efficiency"
-                data-questions="How do we support corporate clients? What are our business packages? How do we handle group bookings?"
-              >
-                <span class="text-lg">💼</span>
-                <span class="text-xs text-center">Business Travel</span>
-              </button>
-
-              <button
-                class="template-btn btn btn-ghost btn-sm h-auto p-2 flex-col gap-1"
-                data-topic="Professional Airport Transfer Services"
-                data-main-keywords="airport transfer, flight pickup, baggage assistance, reliable transport, travel logistics"
-                data-secondary-keywords="flight tracking, meet and greet, door to door"
-                data-questions="How do we track flights? What happens if flights are delayed? Do we offer meet and greet services?"
-              >
-                <span class="text-lg">✈️</span>
-                <span class="text-xs text-center">Airport Transfer</span>
-              </button>
-
-              <button
-                class="template-btn btn btn-ghost btn-sm h-auto p-2 flex-col gap-1"
-                data-topic="Premium Event Transportation Services"
-                data-main-keywords="event transport, wedding cars, special occasions, group travel, celebration transport"
-                data-secondary-keywords="luxury weddings, corporate events, party transport"
-                data-questions="What vehicles are available for events? How do we handle large groups? What are our wedding packages?"
-              >
-                <span class="text-lg">🎉</span>
-                <span class="text-xs text-center">Event Transport</span>
-              </button>
-
-              <button
-                class="template-btn btn btn-ghost btn-sm h-auto p-2 flex-col gap-1"
-                data-topic="City Tourism and Sightseeing Transport"
-                data-main-keywords="city tours, sightseeing transport, tourist services, guided tours, cultural experiences"
-                data-secondary-keywords="local attractions, cultural sites, tourist packages"
-                data-questions="What attractions do we visit? Do we provide tour guides? What are our tourism packages?"
-              >
-                <span class="text-lg">🏛️</span>
-                <span class="text-xs text-center">Tourism</span>
-              </button>
-            </div>
-          </div>
-
           <!-- Basic Info -->
           <div class="grid grid-cols-1 gap-6 mb-8">
             <div class="lg:col-span-2 space-y-6">
@@ -555,7 +467,7 @@
           </div>
         </div>
 
-        <!-- Step 4: Release Configuration -->
+        <!-- Step 4: Upload Configuration -->
         <div id="releaseStep" class="card cursor-card p-4 sm:p-6 mb-6 hidden">
           <div class="flex items-center gap-3 mb-6">
             <div
@@ -565,10 +477,10 @@
             </div>
             <div>
               <h2 class="text-lg font-semibold text-cursor-text">
-                Release Configuration
+                Upload Configuration
               </h2>
               <p class="text-sm text-cursor-muted">
-                Configure your Contentful release or skip this step
+                Configure your page deployment
               </p>
             </div>
           </div>
@@ -578,7 +490,7 @@
             <h3 class="text-md font-medium text-cursor-text mb-4">
               Publishing Method
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 gap-4">
               <!-- Contentful Release Option (now first) -->
               <div
                 class="release-mode-card cursor-pointer p-4 rounded-lg border-2 border-cursor-border hover:border-cursor-accent transition-all"
@@ -616,49 +528,15 @@
                   management.
                 </p>
               </div>
-
-              <!-- Direct Publish Option (now second) -->
-              <div
-                class="release-mode-card cursor-pointer p-4 rounded-lg border-2 border-cursor-border hover:border-cursor-accent transition-all"
-                data-mode="direct"
-              >
-                <div class="flex items-center gap-3 mb-3">
-                  <div
-                    class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center"
-                  >
-                    <svg
-                      class="w-4 h-4 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      ></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 class="font-medium text-cursor-text">Direct Publish</h4>
-                    <p class="text-xs text-cursor-muted">Create as drafts</p>
-                  </div>
-                </div>
-                <p class="text-sm text-cursor-muted">
-                  Components will be created in Contentful as draft entries. You
-                  can review and publish them manually later.
-                </p>
-              </div>
             </div>
           </div>
 
-          <!-- Release Configuration Form (hidden by default) -->
+          <!-- Deployment Configuration Form (hidden by default) -->
           <div id="releaseConfigForm" class="space-y-6 hidden">
-            <!-- Release Title - Full Width -->
+            <!-- Deployment Title - Full Width -->
             <div class="space-y-2">
               <label class="text-sm font-medium text-cursor-text"
-                >Release Title *</label
+                >Deployment Title *</label
               >
               <input
                 type="text"
@@ -673,46 +551,21 @@
             </div>
 
             <!-- Publishing Options - Two Columns -->
-            <div class="space-y-2">
-              <label class="text-sm font-medium text-cursor-text"
-                >Publishing Options</label
-              >
-              <div class="grid grid-cols-2 gap-4">
-                <!-- Draft Option (Default) -->
-                <label
-                  class="flex items-center gap-3 p-3 rounded-lg border border-cursor-border cursor-pointer hover:border-cursor-accent transition-colors"
-                >
-                  <input
-                    type="radio"
-                    name="publishTiming"
-                    value="draft"
-                    class="radio radio-primary"
-                    checked
-                  />
-                  <div>
-                    <div class="font-medium text-cursor-text">
-                      Create as Draft
-                    </div>
-                    <div class="text-xs text-cursor-muted">
-                      Release will be saved but not published
-                    </div>
-                  </div>
-                </label>
-              </div>
-            </div>
 
-            <!-- Release Summary -->
+            <!-- Deployment Summary -->
             <div
               class="p-4 bg-cursor-bg rounded-lg border border-cursor-border"
             >
-              <h4 class="font-medium text-cursor-text mb-2">Release Summary</h4>
+              <h4 class="font-medium text-cursor-text mb-2">
+                Deployment Summary
+              </h4>
               <div class="space-y-1 text-sm text-cursor-muted">
                 <div>
                   •
                   <span id="releaseSummaryComponents">Loading...</span>
                   components will be included
                 </div>
-                <div>• Release will be created in Contentful</div>
+                <div>• Deployment will be created in Contentful</div>
                 <div id="releaseSummaryTiming">
                   • Publishing: <span class="text-cursor-text">Draft</span>
                 </div>
@@ -749,10 +602,10 @@
             </div>
             <div>
               <h2 class="text-lg font-semibold text-cursor-text">
-                Ready to Publish
+                Ready to Deploy
               </h2>
               <p class="text-sm text-cursor-muted">
-                Your content is ready to be published to Contentful
+                Page is ready to be saved to Contentful
               </p>
             </div>
           </div>
@@ -784,7 +637,7 @@
               id="publishBtn"
               class="btn cursor-gradient text-white hover:opacity-90 cursor-glow order-1 sm:order-2"
             >
-              📤 Publish to Contentful
+              📤 Upload to Contentful
             </button>
           </div>
         </div>

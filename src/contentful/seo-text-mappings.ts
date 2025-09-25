@@ -33,12 +33,7 @@ export function mapAISEOTextToContentful(
       content.imagePosition || CONTENTFUL_SEO_TEXT_SCHEMA.defaultValues.imageOn,
   };
 
-  // Set small photo text (optional, localized)
-  if (content.shortDescription) {
-    seoTextEntry.fields.smallPhotoText = {
-      [locale]: content.shortDescription.substring(0, 400), // Respect validation limit
-    };
-  }
+  // smallPhotoText is no longer AI generated - leave empty
 
   // Note: imageUrl and imageAltText are intentionally not set
   // Images should be manually assigned in Contentful interface

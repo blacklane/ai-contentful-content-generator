@@ -1,6 +1,5 @@
 // Feature flags and constants for the frontend application
 export interface FeatureFlags {
-  SHOW_QUICK_START_TEMPLATES: boolean;
   SHOW_AI_ASSISTANT: boolean;
   SHOW_PROGRESS_SIDEBAR: boolean;
 }
@@ -22,28 +21,8 @@ export interface ErrorMessages {
   SERVER_ERROR: string;
 }
 
-export interface QuickStartTemplate {
-  id: string;
-  name: string;
-  description: string;
-  emoji: string;
-  topic: string;
-  keywords: string;
-  color: string;
-  tags: string[];
-}
-
-export interface QuickStartTemplates {
-  ENABLED: boolean;
-  TEMPLATES: QuickStartTemplate[];
-}
-
 // FEATURE_FLAGS are set based on environment variables or default values.
 export const FEATURE_FLAGS: FeatureFlags = {
-  SHOW_QUICK_START_TEMPLATES:
-    typeof process !== 'undefined' && process.env && process.env.NODE_ENV
-      ? process.env.NODE_ENV === 'development'
-      : true, // Default to true if environment is unknown
   SHOW_AI_ASSISTANT: false,
   SHOW_PROGRESS_SIDEBAR: true,
 };
@@ -65,76 +44,13 @@ export const ERROR_MESSAGES: ErrorMessages = {
   SERVER_ERROR: 'Server error. Please try again later.',
 };
 
-export const QUICK_START_TEMPLATES: QuickStartTemplates = {
-  ENABLED: FEATURE_FLAGS.SHOW_QUICK_START_TEMPLATES,
-  TEMPLATES: [
-    {
-      id: 'luxury-transport',
-      name: 'Luxury Transport',
-      description: 'Premium chauffeur services',
-      emoji: '🚗',
-      topic: 'Luxury Chauffeur Service in Berlin',
-      keywords:
-        'luxury chauffeur, premium car service, Berlin airport transfer, professional driver, VIP transport',
-      color: 'blue',
-      tags: ['VIP', 'luxury'],
-    },
-    {
-      id: 'business-travel',
-      name: 'Business Travel',
-      description: 'Corporate solutions',
-      emoji: '💼',
-      topic: 'Corporate Business Travel Solutions',
-      keywords:
-        'corporate travel, business transportation, executive services, meeting transfers, company transport',
-      color: 'green',
-      tags: ['corporate', 'executive'],
-    },
-    {
-      id: 'airport-transfer',
-      name: 'Airport Transfer',
-      description: 'Flight connections',
-      emoji: '✈️',
-      topic: 'Professional Airport Transfer Services',
-      keywords:
-        'airport transfer, flight pickup, baggage assistance, reliable transport, travel logistics',
-      color: 'orange',
-      tags: ['airport', 'reliable'],
-    },
-    {
-      id: 'event-transport',
-      name: 'Event Transport',
-      description: 'Special occasions',
-      emoji: '🎉',
-      topic: 'Premium Event Transportation Services',
-      keywords:
-        'event transport, wedding cars, special occasions, group travel, celebration transport',
-      color: 'purple',
-      tags: ['events', 'wedding'],
-    },
-    {
-      id: 'tourism',
-      name: 'Tourism',
-      description: 'City sightseeing',
-      emoji: '🏛️',
-      topic: 'City Tourism and Sightseeing Transport',
-      keywords:
-        'city tours, sightseeing transport, tourist services, guided tours, cultural experiences',
-      color: 'cyan',
-      tags: ['tours', 'culture'],
-    },
-  ],
-};
-
 // Make constants available globally for backwards compatibility during migration
 declare global {
   interface Window {
     FEATURE_FLAGS: FeatureFlags;
     ERROR_MESSAGES: ErrorMessages;
-    QUICK_START_TEMPLATES: QuickStartTemplates;
   }
 }
 
 window.FEATURE_FLAGS = FEATURE_FLAGS;
 window.ERROR_MESSAGES = ERROR_MESSAGES;
-window.QUICK_START_TEMPLATES = QUICK_START_TEMPLATES;

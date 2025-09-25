@@ -51,8 +51,6 @@ export const getComponentSchemas = async (
         description:
           'Discover how our cutting-edge platform transforms the way modern businesses operate. With advanced automation, intelligent analytics, and seamless integrations, you can streamline workflows, reduce operational costs, and accelerate growth. Join thousands of satisfied customers who have already experienced the power of our comprehensive business solution.',
         imagePosition: 'right',
-        shortDescription:
-          'Transform your business with cutting-edge platform solutions.',
       },
     },
   };
@@ -121,7 +119,6 @@ export const getFallbackSchemas = (
               title: 'string (10-80 chars)',
               description: 'string (100-1000 chars)',
               imagePosition: 'string (left or right, optional)',
-              shortDescription: 'string (optional, max 400 chars)',
             },
           });
         }

@@ -29,7 +29,7 @@ export interface ProjectData {
 }
 
 export interface ReleaseConfig {
-  mode: 'direct' | 'release';
+  mode: 'release';
   title: string;
   description: string;
   publishTiming: 'draft' | 'published';

@@ -38,7 +38,7 @@ export const BLACKLANE_CONTENT_GENERATION_PROMPT = (
 
 Main keywords: ${mainKeywords}
 Secondary keyword: ${secondaryKeywords || 'Not provided'}
-Questions: ${questions || 'Not provided'}
+Questions: ${questions ? `${questions} (These will be prioritized in FAQ generation)` : 'Not provided (FAQ questions will be AI-generated based on keywords)'}
 Language: ${language}
 Content types needed: ${contentTypes.join(', ')}${contextInfo}
 
@@ -83,7 +83,7 @@ Requirements:
 - CRITICAL: If seoText is requested, generate EXACTLY 3 seoText sections with unique content
 - CRITICAL: For seoText components, do NOT generate imageAltText or assign images - leave these fields empty
 - Hero components: Do NOT generate CTA text, CTA links, or CTA buttons - leave these empty
-- FAQ: minimum of 3 questions, maximum of 8, decide number of questions based on keywords
+- FAQ: Generate 5-6 questions total. If questions are provided in the "Questions" field, use those FIRST as priority questions. If provided questions are fewer than 5-6, supplement with AI-generated questions relevant to the keywords to reach the recommended 5-6 total questions. If no questions are provided, generate 5-6 relevant questions based on keywords.
 - CRITICAL: Include minimum 3 unique Blacklane links within the text by naturally placing them as anchor text
 - CRITICAL: Each URL must be used only ONCE - NO DUPLICATE LINKS allowed anywhere in the content
 - CRITICAL: Before adding any link, verify it exists in https://www.blacklane.com/sitemap.xml - DO NOT create or invent URLs
@@ -94,7 +94,7 @@ Requirements:
 - Make content relevant to the main keywords: "${mainKeywords}"
 - Use provided main keywords: "${mainKeywords}"
 - Use provided secondary keywords: "${secondaryKeywords || 'None provided'}"
-- Address provided questions: "${questions || 'None provided'}"
+- For FAQ generation: ${questions ? `PRIORITIZE these provided questions: "${questions}". Use these as your primary FAQ questions, then supplement with additional AI-generated questions if needed to reach 5-6 total questions.` : 'No specific questions provided - generate 5-6 relevant FAQ questions based on the main keywords and topic.'}
 - Return only valid JSON object
 - Use ${language} language for all content
 - In metadata.internalLinksUsed, list all internal links you included`;

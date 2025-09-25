@@ -27,7 +27,6 @@ export const publishContentRoute = async (req: Request, res: Response) => {
 
     const {
       generatedContent,
-      releaseMode = 'direct',
       releaseConfig,
       imageUrls = {},
     }: PublishingRequest = req.body;
@@ -39,34 +38,31 @@ export const publishContentRoute = async (req: Request, res: Response) => {
       });
     }
 
-    let publishResult;
-
-    if (releaseMode === 'release' && releaseConfig) {
-      // Use provided release title, or fallback to page metaTitle, or final fallback
-      const releaseTitle =
-        releaseConfig.title ||
-        generatedContent.metaTitle ||
-        'AI Generated Page Release';
-
-      publishResult = await publisher.publishPageAsRelease(
-        generatedContent,
-        releaseTitle,
-        {
-          imageUrls,
-        },
-      );
-    } else {
-      publishResult = await publisher.publishStaticPage(generatedContent, {
-        imageUrls,
+    if (!releaseConfig) {
+      return res.status(400).json({
+        error: 'Missing release configuration',
+        message: 'releaseConfig field is required',
       });
     }
+
+    // Use provided release title, or fallback to page metaTitle, or final fallback
+    const releaseTitle: string =
+      releaseConfig.title ||
+      (generatedContent.metaTitle as string) ||
+      'AI Generated Page Release';
+
+    const publishResult = await publisher.publishPageAsRelease(
+      generatedContent,
+      releaseTitle,
+      {
+        imageUrls,
+      },
+    );
 
     res.json({
       success: publishResult.success,
       message: publishResult.success
-        ? releaseMode === 'release'
-          ? 'Release created successfully'
-          : 'Static page published to Contentful successfully'
+        ? 'Release created successfully'
         : 'Publishing failed',
       data: {
         pageId:
