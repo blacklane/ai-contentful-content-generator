@@ -40,7 +40,6 @@ router.post('/login', authRateLimiter, async (req: Request, res: Response) => {
 
     // Generate JWT token
     const token = jwtManager.generateToken(authResult.username!);
-    const remainingTime = jwtManager.getTokenRemainingTime(token);
 
     logger.info(`Successful login for username: ${authResult.username}`);
 
@@ -50,9 +49,6 @@ router.post('/login', authRateLimiter, async (req: Request, res: Response) => {
       data: {
         token,
         username: authResult.username,
-        expiresIn: remainingTime,
-        sessionDuration:
-          parseInt(process.env.SESSION_DURATION_MINUTES || '25') * 60 * 1000, // in milliseconds
       },
     });
   } catch (error) {
@@ -91,17 +87,13 @@ router.post('/verify', (req: Request, res: Response) => {
       });
     }
 
-    const remainingTime = jwtManager.getTokenRemainingTime(token);
-
     res.json({
       success: true,
       message: 'Token is valid',
       data: {
         username: decoded.username,
         userId: decoded.userId,
-        expiresIn: remainingTime,
         issuedAt: decoded.iat * 1000, // Convert to milliseconds
-        expiresAt: decoded.exp * 1000, // Convert to milliseconds
       },
     });
   } catch (error) {
@@ -121,15 +113,11 @@ router.post('/verify', (req: Request, res: Response) => {
 router.get('/status', (req: Request, res: Response) => {
   try {
     const isConfigured = credentialsManager.isConfigured();
-    const sessionDuration = parseInt(
-      process.env.SESSION_DURATION_MINUTES || '25',
-    );
 
     res.json({
       success: true,
       data: {
         authEnabled: isConfigured,
-        sessionDuration: sessionDuration * 60 * 1000, // in milliseconds
         requiresAuth: isConfigured,
       },
     });

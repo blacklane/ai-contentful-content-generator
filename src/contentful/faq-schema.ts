@@ -95,9 +95,9 @@ export const CONTENTFUL_FAQ_SCHEMA = {
   // Required fields for component creation
   requiredFields: ['title', 'image', 'questions', 'name'],
 
-  // Default values
+  // Default values (fallbacks when no page context available)
   defaultValues: {
-    name: 'FAQ Section',
+    name: 'FAQ',
     title: 'Frequently Asked Questions',
   },
 

@@ -17,7 +17,7 @@
     <!-- Sidebar -->
     <div
       id="sidebar"
-      class="fixed left-0 top-0 h-full w-64 card border-r border-cursor-border z-30 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"
+      class="hidden fixed left-0 top-0 h-full w-64 card border-r border-cursor-border z-30 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"
     >
       <div class="p-6">
         <!-- Progress Steps -->
@@ -49,7 +49,7 @@
               >
                 3
               </div>
-              <span class="text-sm text-cursor-muted">Generate</span>
+              <span class="text-sm text-cursor-muted">Generation</span>
             </div>
             <div class="flex items-center gap-3">
               <div
@@ -58,7 +58,7 @@
               >
                 4
               </div>
-              <span class="text-sm text-cursor-muted">Release</span>
+              <span class="text-sm text-cursor-muted">Deployment</span>
             </div>
             <div class="flex items-center gap-3">
               <div
@@ -67,7 +67,7 @@
               >
                 5
               </div>
-              <span class="text-sm text-cursor-muted">Publish</span>
+              <span class="text-sm text-cursor-muted">Upload</span>
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="lg:ml-64 min-h-screen">
+    <div class="hidden lg:ml-64 min-h-screen" id="mainContent">
       <!-- Top Bar -->
       <div
         class="border-b border-cursor-border bg-cursor-sidebar/50 backdrop-blur-sm sticky top-0 z-50"
@@ -137,9 +137,6 @@
               <h1 class="text-lg font-medium text-cursor-text">
                 AI Page Generator
               </h1>
-              <p class="text-xs text-cursor-muted hidden md:block">
-                Create optimized content for Contentful CMS
-              </p>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -437,11 +434,8 @@
             </div>
             <div>
               <h2 class="text-lg font-semibold text-cursor-text">
-                Generated Content
+                Generation Preview
               </h2>
-              <p class="text-sm text-cursor-muted">
-                Your content is ready - review and configure release
-              </p>
             </div>
           </div>
 
@@ -462,7 +456,7 @@
               id="nextToRelease"
               class="btn cursor-gradient text-white hover:opacity-90 cursor-glow order-1 sm:order-2"
             >
-              Next: Release Setup →
+              Next: Deployment Setup →
             </button>
           </div>
         </div>
@@ -491,7 +485,6 @@
               Publishing Method
             </h3>
             <div class="grid grid-cols-1 gap-4">
-              <!-- Contentful Release Option (now first) -->
               <div
                 class="release-mode-card cursor-pointer p-4 rounded-lg border-2 border-cursor-border hover:border-cursor-accent transition-all"
                 data-mode="release"
@@ -516,10 +509,10 @@
                   </div>
                   <div>
                     <h4 class="font-medium text-cursor-text">
-                      Contentful Release
+                      Contentful Launch
                     </h4>
                     <p class="text-xs text-cursor-muted">
-                      Coordinate release publishing
+                      Coordinate page publishing
                     </p>
                   </div>
                 </div>
@@ -578,16 +571,16 @@
             class="flex flex-col sm:flex-row justify-between gap-3 pt-6 border-t border-cursor-border"
           >
             <button
-              id="backToResults"
+              id="backToPreview"
               class="btn btn-outline order-2 sm:order-1"
             >
-              ← Back to Results
+              ← Back to JSON Preview
             </button>
             <button
               id="proceedToPublish"
               class="btn cursor-gradient text-white hover:opacity-90 cursor-glow order-1 sm:order-2"
             >
-              Proceed to Publish
+              Proceed to Upload
             </button>
           </div>
         </div>
@@ -631,7 +624,7 @@
               id="backToRelease"
               class="btn btn-outline order-2 sm:order-1"
             >
-              ← Back to Release Setup
+              ← Back to Upload Configuration
             </button>
             <button
               id="publishBtn"

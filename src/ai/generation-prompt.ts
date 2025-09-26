@@ -76,14 +76,21 @@ ${componentExamples}
 
 Requirements:
 - Meta title: Maximum 60 characters, based on primary keywords, Title Case (e.g. Hello World)
+  Examples of good meta titles:
+  • "Airport Transfer in New York - Reliable Chauffeured Rides"
+  • "Limo Service in NYC - Chauffeured, Private Rides" 
+  • "Car Service Between NYC and Boston"
+  • "Professional Chauffeur Service in Santa Monica"
 - Meta description: Maximum 150 characters, based on main and secondary keywords
 - H1: max 30 characters Title Case (e.g. Hello World) - ONLY for H1 titles
 - H2: Normal sentence case (e.g. Hello world) - NOT Title Case
 - Body copy: minimum 700 characters, maximum 1050 characters per seoText section
 - CRITICAL: If seoText is requested, generate EXACTLY 3 seoText sections with unique content
+- CRITICAL: For seoText components, use alternating imagePosition pattern: 1st section = "left", 2nd section = "right", 3rd section = "left" (checkerboard pattern)
 - CRITICAL: For seoText components, do NOT generate imageAltText or assign images - leave these fields empty
 - Hero components: Do NOT generate CTA text, CTA links, or CTA buttons - leave these empty
 - FAQ: Generate 5-6 questions total. If questions are provided in the "Questions" field, use those FIRST as priority questions. If provided questions are fewer than 5-6, supplement with AI-generated questions relevant to the keywords to reach the recommended 5-6 total questions. If no questions are provided, generate 5-6 relevant questions based on keywords.
+- FAQ questions: Normal sentence case (e.g. How can I book a ride?) - NOT Title Case
 - CRITICAL: Include minimum 3 unique Blacklane links within the text by naturally placing them as anchor text
 - CRITICAL: Each URL must be used only ONCE - NO DUPLICATE LINKS allowed anywhere in the content
 - CRITICAL: Before adding any link, verify it exists in https://www.blacklane.com/sitemap.xml - DO NOT create or invent URLs

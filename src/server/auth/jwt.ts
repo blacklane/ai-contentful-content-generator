@@ -11,14 +11,10 @@ export interface AuthPayload {
 
 export class JWTManager {
   private secret: string;
-  private sessionDuration: number; // in minutes
 
   constructor() {
     // Generate secret if not provided in env
     this.secret = process.env.JWT_SECRET || this.generateSecret();
-    this.sessionDuration = parseInt(
-      process.env.SESSION_DURATION_MINUTES || '25',
-    );
 
     // Validate configuration
     if (!process.env.JWT_SECRET) {
@@ -34,13 +30,6 @@ export class JWTManager {
         'For production, please set JWT_SECRET in your environment variables.',
       );
     }
-
-    // Validate session duration
-    if (this.sessionDuration < 5 || this.sessionDuration > 480) {
-      throw new Error(
-        'SESSION_DURATION_MINUTES must be between 5 and 480 minutes',
-      );
-    }
   }
 
   private generateSecret(): string {
@@ -48,7 +37,7 @@ export class JWTManager {
   }
 
   /**
-   * Generate JWT token for authenticated user
+   * Generate JWT token for authenticated user (no expiration)
    */
   generateToken(username: string): string {
     const payload: Omit<AuthPayload, 'iat' | 'exp'> = {
@@ -57,7 +46,6 @@ export class JWTManager {
     };
 
     return jwt.sign(payload, this.secret, {
-      expiresIn: `${this.sessionDuration}m`,
       issuer: 'contentful-ai-generator',
       audience: 'contentful-ai-generator-users',
     });
@@ -81,26 +69,6 @@ export class JWTManager {
         console.log('JWT token expired:', error.message);
       }
       return null;
-    }
-  }
-
-  /**
-   * Get remaining time in milliseconds for token
-   */
-  getTokenRemainingTime(token: string): number {
-    try {
-      const decoded = jwt.decode(token) as AuthPayload;
-      if (!decoded || !decoded.exp) {
-        return 0;
-      }
-
-      const expirationTime = decoded.exp * 1000; // Convert to milliseconds
-      const currentTime = Date.now();
-      const remainingTime = expirationTime - currentTime;
-
-      return Math.max(0, remainingTime);
-    } catch {
-      return 0;
     }
   }
 }
@@ -135,7 +103,7 @@ export const authenticateToken = (
   }
 
   // Add user info to request object
-  (req as any).user = decoded;
+  (req as Request & { user: AuthPayload }).user = decoded;
   next();
 };
 
@@ -153,7 +121,7 @@ export const optionalAuth = (
   if (token) {
     const decoded = jwtManager.verifyToken(token);
     if (decoded) {
-      (req as any).user = decoded;
+      (req as Request & { user: AuthPayload }).user = decoded;
     }
   }
 

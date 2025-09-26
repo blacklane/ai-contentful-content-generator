@@ -59,9 +59,17 @@ export const getComponentSchemas = async (
 
   contentTypes.forEach(type => {
     if (type === 'seoText') {
-      // Always generate exactly 3 seoText components
+      // Always generate exactly 3 seoText components with alternating image positions
+      const imagePositions = ['left', 'right', 'left']; // Checkerboard pattern
       for (let i = 0; i < 3; i++) {
-        result.push(schemas.seoText);
+        const seoTextComponent = {
+          ...schemas.seoText,
+          content: {
+            ...schemas.seoText.content,
+            imagePosition: imagePositions[i],
+          },
+        };
+        result.push(seoTextComponent);
       }
     } else if (schemas[type as keyof typeof schemas]) {
       result.push(schemas[type as keyof typeof schemas]);
@@ -101,7 +109,7 @@ export const getFallbackSchemas = (
       case 'faqs':
         fallbackSchemas.push({
           type: 'faqs',
-          title: 'string (optional, max 50 chars)',
+          title: 'Frequently asked questions',
           items: [
             {
               question: 'string (10-150 chars)',
@@ -111,14 +119,15 @@ export const getFallbackSchemas = (
         });
         break;
       case 'seoText':
-        // Always generate exactly 3 seoText components
+        // Always generate exactly 3 seoText components with alternating image positions
+        const imagePositions = ['left', 'right', 'left']; // Checkerboard pattern
         for (let i = 0; i < 3; i++) {
           fallbackSchemas.push({
             type: 'seoText',
             content: {
               title: 'string (10-80 chars)',
               description: 'string (100-1000 chars)',
-              imagePosition: 'string (left or right, optional)',
+              imagePosition: imagePositions[i], // Alternating positions
             },
           });
         }

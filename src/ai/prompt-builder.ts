@@ -1,7 +1,7 @@
 import {
   BLACKLANE_CONTENT_GENERATION_PROMPT,
   PromptTemplateParams,
-} from './blacklane-content-generation-prompt';
+} from './generation-prompt';
 import { getComponentSchemas, getFallbackSchemas } from './schemas';
 import { ComponentSchema, GenerationParams } from './types';
 

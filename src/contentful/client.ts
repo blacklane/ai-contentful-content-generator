@@ -96,7 +96,7 @@ export class ContentfulPublisher {
     entryIds: string[] = [],
   ): Promise<ReleaseResult> {
     try {
-      console.log('🚀 Creating Contentful release...');
+      console.log('🚀 Creating Contentful page...');
 
       const space = await this.client.getSpace(this.config.spaceId);
       const environment = await space.getEnvironment(this.config.environment);
@@ -372,6 +372,7 @@ export class ContentfulPublisher {
     aiFAQData: any,
     defaultImageAssetId: string,
     _options: Record<string, unknown> = {},
+    pageContext?: { mainKeywords?: string; metaTitle?: string },
   ): Promise<PublishResult> {
     try {
       console.log('❓ Starting FAQ component publishing...');
@@ -418,6 +419,7 @@ export class ContentfulPublisher {
         accordionItemIds,
         defaultImageAssetId,
         this.config.locale,
+        pageContext,
       );
 
       // Validate FAQ entry
@@ -630,6 +632,10 @@ export class ContentfulPublisher {
             section,
             defaultImageAssetId,
             {},
+            {
+              mainKeywords: pageData.mainKeywords,
+              metaTitle: pageData.metaTitle,
+            },
           );
 
           if (faqResult.success && faqResult.entryId) {
@@ -906,7 +912,6 @@ export class ContentfulPublisher {
           failureCount++;
         }
       }
-      // TODO: Add other component types (faqs, etc.)
     }
 
     return {

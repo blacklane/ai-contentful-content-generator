@@ -14,8 +14,6 @@ export interface AuthResponse {
   data?: {
     token: string;
     username: string;
-    expiresIn: number;
-    sessionDuration: number;
   };
   code?: string;
 }
@@ -24,7 +22,6 @@ export interface AuthStatus {
   success: boolean;
   data?: {
     authEnabled: boolean;
-    sessionDuration: number;
     requiresAuth: boolean;
   };
 }
@@ -35,19 +32,14 @@ export interface TokenVerifyResponse {
   data?: {
     username: string;
     userId: string;
-    expiresIn: number;
     issuedAt: number;
-    expiresAt: number;
   };
   code?: string;
 }
 
 class AuthManager {
   private token: string | null = null;
-  private sessionTimeout: number | null = null;
-  private sessionDuration: number = 25 * 60 * 1000; // 25 minutes in milliseconds
   private readonly TOKEN_KEY = 'auth_token';
-  private readonly TOKEN_EXPIRY_KEY = 'auth_token_expiry';
 
   constructor() {
     this.loadTokenFromStorage();
@@ -60,19 +52,8 @@ class AuthManager {
   private loadTokenFromStorage(): void {
     try {
       const storedToken = localStorage.getItem(this.TOKEN_KEY);
-      const storedExpiry = localStorage.getItem(this.TOKEN_EXPIRY_KEY);
-
-      if (storedToken && storedExpiry) {
-        const expiryTime = parseInt(storedExpiry);
-        const currentTime = Date.now();
-
-        if (currentTime < expiryTime) {
-          this.token = storedToken;
-          this.startSessionTimer(expiryTime - currentTime);
-        } else {
-          // Token expired, clean up
-          this.clearStoredToken();
-        }
+      if (storedToken) {
+        this.token = storedToken;
       }
     } catch (error) {
       console.error('Error loading token from storage:', error);
@@ -83,11 +64,9 @@ class AuthManager {
   /**
    * Save token to localStorage
    */
-  private saveTokenToStorage(token: string, expiresIn: number): void {
+  private saveTokenToStorage(token: string): void {
     try {
-      const expiryTime = Date.now() + expiresIn;
       localStorage.setItem(this.TOKEN_KEY, token);
-      localStorage.setItem(this.TOKEN_EXPIRY_KEY, expiryTime.toString());
     } catch (error) {
       console.error('Error saving token to storage:', error);
     }
@@ -99,58 +78,9 @@ class AuthManager {
   private clearStoredToken(): void {
     try {
       localStorage.removeItem(this.TOKEN_KEY);
-      localStorage.removeItem(this.TOKEN_EXPIRY_KEY);
     } catch (error) {
       console.error('Error clearing stored token:', error);
     }
-  }
-
-  /**
-   * Start session timer for auto-logout
-   */
-  private startSessionTimer(timeRemaining: number): void {
-    if (this.sessionTimeout) {
-      clearTimeout(this.sessionTimeout);
-    }
-
-    this.sessionTimeout = window.setTimeout(() => {
-      this.handleSessionExpired();
-    }, timeRemaining);
-  }
-
-  /**
-   * Handle session expiration
-   */
-  private handleSessionExpired(): void {
-    console.log('Session expired, logging out...');
-    this.logout();
-    this.showSessionExpiredMessage();
-  }
-
-  /**
-   * Show session expired message
-   */
-  private showSessionExpiredMessage(): void {
-    const message = document.createElement('div');
-    message.className =
-      'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300';
-    message.innerHTML = `
-      <div class="flex items-center gap-2">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <span>Session expired. Please log in again.</span>
-      </div>
-    `;
-
-    document.body.appendChild(message);
-
-    // Remove message after 5 seconds
-    setTimeout(() => {
-      if (message.parentNode) {
-        message.parentNode.removeChild(message);
-      }
-    }, 5000);
   }
 
   /**
@@ -162,21 +92,7 @@ class AuthManager {
       if (e.key === this.TOKEN_KEY && !e.newValue) {
         // Token was removed in another tab
         this.token = null;
-        if (this.sessionTimeout) {
-          clearTimeout(this.sessionTimeout);
-          this.sessionTimeout = null;
-        }
         this.redirectToLogin();
-      }
-    });
-
-    // Listen for page visibility changes
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && this.isAuthenticated()) {
-        // Page became visible, verify token is still valid
-        this.verifyToken().catch(() => {
-          this.logout();
-        });
       }
     });
   }
@@ -198,11 +114,9 @@ class AuthManager {
 
       if (result.success && result.data) {
         this.token = result.data.token;
-        this.sessionDuration = result.data.sessionDuration;
 
-        // Save token and start session timer
-        this.saveTokenToStorage(result.data.token, result.data.expiresIn);
-        this.startSessionTimer(result.data.expiresIn);
+        // Save token to localStorage
+        this.saveTokenToStorage(result.data.token);
       }
 
       return result;
@@ -222,12 +136,6 @@ class AuthManager {
   logout(): void {
     this.token = null;
     this.clearStoredToken();
-
-    if (this.sessionTimeout) {
-      clearTimeout(this.sessionTimeout);
-      this.sessionTimeout = null;
-    }
-
     this.redirectToLogin();
   }
 
@@ -322,10 +230,14 @@ class AuthManager {
    * Show login form
    */
   showLoginForm(): void {
-    // Hide main app content
-    const mainContent = document.querySelector('.lg\\:ml-64');
+    const mainContent = document.getElementById('mainContent');
     if (mainContent) {
-      (mainContent as HTMLElement).style.display = 'none';
+      mainContent.classList.add('hidden');
+    }
+
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+      sidebar.classList.add('hidden');
     }
 
     // Show login form
@@ -347,10 +259,16 @@ class AuthManager {
       loginContainer.style.display = 'none';
     }
 
-    // Show main app content
-    const mainContent = document.querySelector('.lg\\:ml-64');
+    // Show sidebar using Tailwind CSS class
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+      sidebar.classList.remove('hidden');
+    }
+
+    // Show main app content using Tailwind CSS class
+    const mainContent = document.getElementById('mainContent');
     if (mainContent) {
-      (mainContent as HTMLElement).style.display = 'block';
+      mainContent.classList.remove('hidden');
     }
   }
 
@@ -415,12 +333,6 @@ class AuthManager {
             Sign In
           </button>
         </form>
-
-        <div class="mt-4 border-t border-cursor-border text-center">
-          <p class="text-xs p-4 text-cursor-muted">
-            Session duration: ${Math.floor(this.sessionDuration / (60 * 1000))} minutes
-          </p>
-        </div>
       </div>
     `;
 

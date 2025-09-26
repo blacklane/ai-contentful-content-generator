@@ -29,7 +29,7 @@ const keywordsValidator = (value: string) => {
   return totalWords.length >= 1;
 };
 
-// Validation schemas - topic removed, mainKeywords is now the primary identifier
+// Validation schemas
 
 export const mainKeywordsSchema = z
   .string()
@@ -117,7 +117,6 @@ export function validateGenerationRequest(data: unknown): {
 }
 
 // Client-side validation helpers
-// Topic validation removed - using mainKeywords as primary identifier
 
 export function validateMainKeywords(value: string): string | null {
   try {

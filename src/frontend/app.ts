@@ -19,7 +19,14 @@ import {
   showResetModal,
   showResultModal,
 } from './js/modals.js';
-import { AppState, resetAppState, updateProjectData } from './js/state.js';
+import {
+  AppState,
+  loadFormDataFromStorage,
+  resetAppState,
+  saveFormDataToStorage,
+  updateProjectData,
+  updateStorageIfChanged,
+} from './js/state.js';
 import {
   closeMobileMenu,
   goToStep1,
@@ -67,6 +74,31 @@ const initApp = async (): Promise<void> => {
   checkServerStatus();
   updateButtonState();
   applyFeatureFlags();
+
+  // Restore form data from localStorage if available
+  const hasRestoredData = loadFormDataFromStorage();
+  if (hasRestoredData) {
+    // Update form fields with restored data
+    restoreFormFields();
+    validateStep1(); // Re-validate after restoration
+  }
+};
+
+// Function to restore form fields from AppState
+const restoreFormFields = (): void => {
+  if (elements.projectMainKeywords) {
+    elements.projectMainKeywords.value = AppState.projectData.mainKeywords;
+  }
+  if (elements.projectSecondaryKeywords) {
+    elements.projectSecondaryKeywords.value =
+      AppState.projectData.secondaryKeywords;
+  }
+  if (elements.projectQuestions) {
+    elements.projectQuestions.value = AppState.projectData.questions;
+  }
+  if (elements.projectLanguage) {
+    elements.projectLanguage.value = AppState.projectData.language;
+  }
 };
 
 // Component Rendering
@@ -133,26 +165,31 @@ const setupEventListeners = (): void => {
     return;
   }
 
-  // Form inputs - topic removed
+  // Form inputs
   elements.projectMainKeywords.addEventListener('input', () => {
     updateProjectData(elements);
+    updateStorageIfChanged(); // Update storage if data changed
     validateStep1();
   });
   elements.projectSecondaryKeywords?.addEventListener('input', () => {
     updateProjectData(elements);
+    updateStorageIfChanged(); // Update storage if data changed
     validateStep1();
   });
   elements.projectQuestions?.addEventListener('input', () => {
     updateProjectData(elements);
+    updateStorageIfChanged(); // Update storage if data changed
     validateStep1();
   });
-  elements.projectLanguage.addEventListener('change', () =>
-    updateProjectData(elements),
-  );
+  elements.projectLanguage.addEventListener('change', () => {
+    updateProjectData(elements);
+    updateStorageIfChanged(); // Update storage if data changed
+  });
 
   // Navigation
   elements.nextToComponents?.addEventListener('click', () => {
     updateProjectData(elements);
+    saveFormDataToStorage(); // Save form data when moving to step 2
     goToStep2();
     validateComponentSelection();
   });
@@ -164,7 +201,7 @@ const setupEventListeners = (): void => {
   });
   elements.backToTopic?.addEventListener('click', goToStep1);
   elements.backToComponents?.addEventListener('click', goToStep2);
-  elements.backToResults?.addEventListener('click', goToStep3);
+  elements.backToPreview?.addEventListener('click', goToStep3);
   elements.backToRelease?.addEventListener('click', goToStep4);
   elements.proceedToPublish?.addEventListener('click', () => {
     goToStep5();
@@ -334,8 +371,8 @@ const updatePublishingSummary = (): void => {
   const title = AppState.releaseConfig.title || 'Untitled Release';
 
   const summary = `
-    <div class="text-cursor-text">🚀 Release Mode: "${title}"</div>
-    <div class="text-cursor-muted">• ${componentCount} components will be grouped in a release</div>
+    <div class="text-cursor-muted">Release Title: "${title}" </div>
+    <div class="text-cursor-muted">• ${componentCount} components will be grouped in a Contentful release</div>
     <div class="text-cursor-muted">• Release will be managed in Contentful</div>
     <div class="text-cursor-muted">• Will be saved as draft</div>
   `;
@@ -388,7 +425,7 @@ const publishContent = async (): Promise<void> => {
   const originalText = publishBtn.textContent || '';
 
   publishBtn.disabled = true;
-  publishBtn.textContent = '📤 Publishing to Contentful...';
+  publishBtn.textContent = '📤 Uploading to Contentful...';
 
   try {
     if (!AppState.generatedContent) {
@@ -410,19 +447,13 @@ const publishContent = async (): Promise<void> => {
     const result = await httpClient.publishContent(publishPayload);
 
     if (result.success) {
-      publishBtn.textContent = '✅ Published to Contentful!';
+      publishBtn.textContent = '✅ Uploaded to Contentful!';
       publishBtn.classList.remove('cursor-gradient');
       publishBtn.classList.add('bg-green-500');
 
       let successMessage = '';
-      if (result.data?.metadata) {
-        const metadata = result.data.metadata;
-        successMessage =
-          'Successfully created Custom Static Page in Contentful!';
-        if (metadata.componentsCreated) {
-          successMessage += `\n\nComponents created: ${metadata.componentsCreated}`;
-        }
-      }
+      successMessage =
+        'Successfully created Custom Static Page in Contentful!\n\n<strong>⚠️ Important: Please review and verify all generated content before publishing. The AI-generated text may contain errors or inaccuracies that require correction.</strong>';
 
       let contentfulSpaceId: string | null = null;
       if (result.data?.metadata?.contentfulUrl) {
@@ -433,7 +464,7 @@ const publishContent = async (): Promise<void> => {
         }
       }
 
-      showResultModal('success', 'Publication Successful!', successMessage, {
+      showResultModal('success', 'Upload Successful!', successMessage, {
         showLinks: true,
         contentfulSpaceId: contentfulSpaceId || undefined,
         pageUrl: result.data?.metadata?.contentfulUrl || null,
@@ -596,7 +627,7 @@ const disableNavigationAfterPublish = (): void => {
   const backButtons = [
     'backToTopic',
     'backToComponents',
-    'backToResults',
+    'backToPreview',
     'backToRelease',
   ];
 
@@ -617,7 +648,7 @@ const enableNavigationAfterReset = (): void => {
   const backButtons = [
     'backToTopic',
     'backToComponents',
-    'backToResults',
+    'backToPreview',
     'backToRelease',
   ];
 

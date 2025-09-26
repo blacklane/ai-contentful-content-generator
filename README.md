@@ -9,8 +9,7 @@ Professional web application for AI-powered content generation and Contentful CM
 - **🌍 Multi-language Support** - Content generation in English, Spanish, German, French with localized schemas
 - **🔗 Blacklane AI Integration** - Specialized AI models optimized for content generation
 - **📦 Direct Contentful Publishing** - Seamless integration with Contentful CMS including draft management and releases
-- **🔐 Enterprise Security** - JWT authentication, secure API endpoints, and role-based access control
-- **💬 AI Assistant** - Interactive chat interface for content strategy and SEO optimization guidance
+- **🔐 Simple Authentication** - JWT-based login with persistent sessions for seamless user experience
 - **🎯 Component-Based Architecture** - Modular content components with validation and schema management
 
 ## 🚀 Quick Start
@@ -55,10 +54,10 @@ Professional web application for AI-powered content generation and Contentful CM
 │   │   ├── app.ts               # Main application logic
 │   │   ├── components.ts        # Contentful component schemas
 │   │   └── js/                  # Modular frontend components
-│   │       ├── ai-assistant.ts  # Interactive AI chat
 │   │       ├── auth.ts          # Authentication management
 │   │       ├── content-generation.ts # Content creation workflow
-│   │       └── step-management.ts    # Multi-step form handling
+│   │       ├── step-management.ts    # Multi-step form handling
+│   │       └── validation.ts    # Form validation logic
 │   ├── server/                   # Backend API & middleware
 │   │   ├── routes/              # API endpoints
 │   │   ├── auth/                # JWT & credential management
@@ -81,27 +80,31 @@ Professional web application for AI-powered content generation and Contentful CM
 ### Environment Variables
 
 ```bash
-# Authentication
-AUTH_USERNAME=admin
-AUTH_PASSWORD=your_secure_password_here
-
 # Blacklane AI Integration
 AI_API_KEY=sk-your_blacklane_api_key_here
 AI_PROVIDER=blacklane
 AI_BASE_URL=https://ai-chat.blacklane.net/api/v1
 AI_MODEL_ID=seo-landing-page-generator
 
-# Contentful CMS
-CONTENTFUL_SPACE_ID=your_space_id
+# Contentful CMS Integration
+CONTENTFUL_SPACE_ID=your_contentful_space_id_here
 # For production use 'main', for development use alex's dev environment
-CONTENTFUL_ENVIRONMENT_ID=alex-suprun-dev-new
-CONTENTFUL_MANAGEMENT_TOKEN=CFPAT-your_management_token
+CONTENTFUL_ENVIRONMENT_ID=alex-suprun-dev-new 
+CONTENTFUL_MANAGEMENT_TOKEN=CFPAT-your_management_api_token_here
 
 # Server Configuration
 FRONTEND_PORT=8000
 BACKEND_PORT=8001
 HOST=0.0.0.0
 NODE_ENV=development
+
+# Authentication
+AUTH_USERNAME=admin
+AUTH_PASSWORD=your_secure_password_here
+JWT_SECRET=your_jwt_secret_key_here
+
+# Security & CORS Configuration
+CORS_ORIGIN=http://localhost:8000
 ```
 
 
@@ -112,11 +115,10 @@ NODE_ENV=development
 - **Professional UI/UX** - Dark theme interface with responsive design and accessibility features
 - **Advanced Content Generation** - Structured JSON output with schema validation and error handling
 - **Multi-Language Support** - Localized content generation (EN, ES, DE, FR) with proper schema mapping
-- **Interactive AI Assistant** - Real-time chat interface for content strategy and SEO guidance
-- **Enterprise Security** - JWT authentication, secure API endpoints, CORS protection, and rate limiting
+- **Simple Security** - JWT authentication with persistent sessions, secure API endpoints, and CORS protection
 
 ### ✅ **Contentful CMS Integration**
-- **Direct Publishing** - Seamless content publishing to Contentful with draft management
+- **Direct Publishing** - Seamless content uploading to Contentful with draft management
 - **Component Mapping** - Automated mapping for Hero, FAQ, SEO Text, and custom components
 - **Release Management** - Support for Contentful Releases with draft content organization
 - **Schema Validation** - Real-time validation against Contentful content models
@@ -133,19 +135,18 @@ NODE_ENV=development
 
 ### Step-by-Step Workflow
 
-1. **🔐 Authenticate** - Secure login with username/password
-2. **💬 AI Planning** - Interactive chat with AI assistant for content strategy
-3. **📝 Project Setup** - Define topic, keywords, target language, and content components
-4. **🤖 AI Generation** - Advanced AI creates structured, SEO-optimized content
-5. **✅ Review & Edit** - Validate and customize generated content
-6. **📦 Publish** - Direct publishing to Contentful CMS with release management
+1. **🔐 Authenticate** - Simple login with username/password (persistent session)
+2. **📝 Project Setup** - Define keywords, target language, and content components
+3. **🤖 AI Generation** - Advanced AI creates structured, SEO-optimized content
+4. **✅ Review & Edit** - Validate and customize generated content
+5. **📦 Upload** - Direct uploading to Contentful CMS with release management
 
 ### Example Workflow
 
 **Input:**
 ```
-Topic: "Premium Airport Transfer Service"
-Keywords: "luxury, professional, reliable transport"
+Main Keywords: "Premium Airport Transfer Service"
+Secondary Keywords: "luxury, professional, reliable transport"
 Language: English
 Components: Hero + FAQ + SEO Text
 ```
@@ -198,7 +199,7 @@ npm run type-check         # TypeScript type validation
 - **Frontend:** Vanilla TypeScript + Tailwind CSS + DaisyUI
 - **Build Tools:** Vite + ts-node-dev with hot reload
 - **Validation:** Zod schemas for runtime type safety
-- **Authentication:** JWT with bcrypt password hashing
+- **Authentication:** JWT with persistent sessions (no expiration)
 - **AI Integration:** Blacklane AI with specialized content generation models
 - **CMS:** Contentful Management API with release support
 

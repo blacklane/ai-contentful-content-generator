@@ -25,7 +25,6 @@ export interface ContentfulHeroSchema {
       id: string;
     };
   }>; // Array of video assets
-  foo?: string; // Temporary url field
   hideImageOnMobile: boolean; // Boolean, required, default false
   imageFocus?: 'face' | 'faces' | 'left' | 'right' | 'center'; // Symbol with validation
   lilt_status?: string; // Symbol, omitted

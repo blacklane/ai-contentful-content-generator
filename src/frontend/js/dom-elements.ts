@@ -37,7 +37,7 @@ export interface DOMElements {
   nextToRelease: HTMLButtonElement | null;
   backToTopic: HTMLButtonElement | null;
   backToComponents: HTMLButtonElement | null;
-  backToResults: HTMLButtonElement | null;
+  backToPreview: HTMLButtonElement | null;
   backToRelease: HTMLButtonElement | null;
   proceedToPublish: HTMLButtonElement | null;
 
@@ -111,7 +111,7 @@ export const elements: DOMElements = {
   backToComponents: document.getElementById(
     'backToComponents',
   ) as HTMLButtonElement,
-  backToResults: document.getElementById('backToResults') as HTMLButtonElement,
+  backToPreview: document.getElementById('backToPreview') as HTMLButtonElement,
   backToRelease: document.getElementById('backToRelease') as HTMLButtonElement,
   proceedToPublish: document.getElementById(
     'proceedToPublish',

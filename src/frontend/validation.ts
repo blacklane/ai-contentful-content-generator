@@ -42,7 +42,6 @@ function validateKeywords(value: string): boolean {
 }
 
 // Validation functions
-// Topic validation removed - using mainKeywords as primary field
 
 export function validateMainKeywords(value: string): string | null {
   if (!value || value.trim().length === 0) {

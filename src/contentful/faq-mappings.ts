@@ -50,19 +50,29 @@ export function mapAIFAQsToContentful(
   accordionItemIds: string[],
   defaultImageAssetId: string,
   locale: string = 'en-US',
+  pageContext?: { mainKeywords?: string; metaTitle?: string },
 ): any {
   const faqEntry: any = {
     fields: {},
   };
 
+  // Use hardcoded title as requested - always "Frequently asked questions"
+  const hardcodedTitle = CONTENTFUL_FAQ_SCHEMA.defaultValues.title; // "Frequently Asked Questions"
+
+  // Generate topic-related name using mainKeywords or metaTitle for internal reference
+  const topicContext = pageContext?.mainKeywords || pageContext?.metaTitle;
+  const topicRelatedName = topicContext
+    ? `FAQ - ${topicContext}`
+    : CONTENTFUL_FAQ_SCHEMA.defaultValues.name;
+
   // Set title (required, localized)
   faqEntry.fields.title = {
-    [locale]: aiFAQSection.title || CONTENTFUL_FAQ_SCHEMA.defaultValues.title,
+    [locale]: hardcodedTitle,
   };
 
   // Set name (required, not localized)
   faqEntry.fields.name = {
-    [locale]: CONTENTFUL_FAQ_SCHEMA.defaultValues.name,
+    [locale]: topicRelatedName,
   };
 
   // Set default image (required)
